@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow, QWidget
 
+
 class WindowManager:
     def __init__(self):
         self.windows = []

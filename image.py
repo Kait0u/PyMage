@@ -137,6 +137,7 @@ class Image:
 
     def copy(self) -> "Image":
         new_image = Image(self._name, self.width, self.height)
+        new_image._color_mode = self.color_mode
         new_image.img = self._img.copy()
 
         return new_image
