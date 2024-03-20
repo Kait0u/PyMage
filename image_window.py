@@ -1,13 +1,11 @@
 # import cv2 as cv
-import functools
-
 import numpy as np
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage, qRgb
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget
 
 from image import Image, ColorModes
-
+from histogram_window import HistogramWindow
 from window_manager import WINDOW_MANAGER
 
 LMIN = 0
@@ -42,6 +40,21 @@ class ImageWindow(QMainWindow):
         duplicate_action.setShortcut("Ctrl+D")
         self.image_menu.addAction(duplicate_action)
 
+        self.image_menu.addSeparator()
+        self.histogram_menu = self.image_menu.addMenu("&Histogram")
+
+        equalize_action = QAction("Equalize", self)
+        equalize_action.triggered.connect(self.equalize)
+        self.histogram_menu.addAction(equalize_action)
+
+        stretch_action = QAction("Stretch", self)
+        self.histogram_menu.addAction(stretch_action)
+
+        self.histogram_menu.addSeparator()
+        disp_hist_action = QAction("Display", self)
+        disp_hist_action.triggered.connect(self.display_histogram)
+        self.histogram_menu.addAction(disp_hist_action)
+
         self.widget = QWidget()
         self.setCentralWidget(self.widget)
 
@@ -51,14 +64,8 @@ class ImageWindow(QMainWindow):
         self.image_frame = QLabel()
         self.layout.addWidget(self.image_frame)
 
-        format = QImage.Format_RGB888 if self.image.color_mode != ColorModes.GRAY else QImage.Format_Grayscale8
-
-        self.qt_image = QImage(self.image.img, self.image.width,
-                               self.image.height, self.image.img.strides[0], format)
-
-        self.qt_image = QPixmap.fromImage(self.qt_image)
-        self.image_frame.setPixmap(self.qt_image)
-        self.image_frame.setAlignment(Qt.AlignCenter)
+        self.histogram_window = None
+        self.refresh_image()
 
     @staticmethod
     def from_path(path: str, grayscale: bool = False) -> "ImageWindow":
@@ -79,14 +86,24 @@ class ImageWindow(QMainWindow):
         WINDOW_MANAGER.remove_window(self)
 
     def refresh_image(self):
-        format = QImage.Format_RGB888 if self.image.color_mode != ColorModes.GRAY else QImage.Format_Grayscale8
+        color_format = QImage.Format_RGB888 if self.image.color_mode != ColorModes.GRAY else QImage.Format_Grayscale8
 
         self.qt_image = QImage(self.image.img, self.image.width,
-                               self.image.height, self.image.img.strides[0], format)
+                               self.image.height, self.image.img.strides[0], color_format)
 
         self.qt_image = QPixmap.fromImage(self.qt_image)
         self.image_frame.setPixmap(self.qt_image)
         self.image_frame.setAlignment(Qt.AlignCenter)
+
+        histwin_exists = self.histogram_window is not None
+        is_grayscale = self.image.is_gray
+
+        if histwin_exists and is_grayscale:
+            self.histogram_window.update_data()
+
+        elif histwin_exists and not is_grayscale:
+            WINDOW_MANAGER.remove_window(self.histogram_window)
+            self.histogram_window = None
 
     def to_grayscale(self):
         self.image.convert_color(ColorModes.GRAY)
@@ -103,3 +120,17 @@ class ImageWindow(QMainWindow):
         WINDOW_MANAGER.add_window(new_window)
         new_window.show()
 
+    def display_histogram(self):
+        if self.image.is_gray:
+            self.histogram_window = HistogramWindow(self)
+            WINDOW_MANAGER.add_window(self.histogram_window)
+            self.histogram_window.show()
+        # else:
+        #     raise NotImplementedError("No histogram window for this image!")
+
+    def equalize(self):
+        try:
+            self.image.equalize_histogram()
+            self.refresh_image()
+        except NotImplementedError as error:
+            print(error)

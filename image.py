@@ -57,6 +57,16 @@ def rgb_only(method):
     return wrapper
 
 
+def binary_only(method):
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        if self.color_mode != ColorModes.GRAY or not self.is_binary:
+            raise NotImplementedError("This operation can only be applied to binary images!")
+        return method(self, *args, **kwargs)
+
+    return wrapper
+
+
 class Image:
     def __init__(self, name: str, width: int, height: int, grayscale: bool = False):
         self._name = name
@@ -157,6 +167,15 @@ class Image:
                     COLOR_CONVERSION_MODES[ColorModes.RGB][to]
                 )
 
+    @property
+    def is_gray(self):
+        return self.color_mode == ColorModes.GRAY
+
+    @property
+    def is_binary(self):
+        result = self.is_gray and np.unique(self.img) == np.array([LMIN, LMAX])
+        return result
+
     def negate(self):
         self.img = LMAX - self.img
 
@@ -173,8 +192,6 @@ class Image:
     @grayscale_only
     def equalize_histogram(self):
         cs = cumsum(self.histogram.array)
-        plt.plot(np.arange(LMIN, LMAX + 1), cs)
-        plt.show()
 
         curr_min = np.min(cs)
         curr_max = np.max(cs)

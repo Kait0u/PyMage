@@ -14,13 +14,17 @@ def test():
     p = r"C:\Users\jjaw-\Downloads\harold.jpg"
     # p = r"C:\Users\jjaw-\Downloads\lena.png"
 
+    image = Image.from_file(p)
+    image.convert_color(ColorModes.LAB)
+    image.convert_color(ColorModes.RGB)
+    image.show()
 
-    # image = Image.from_file(p)
     # image.convert_color(ColorModes.GRAY)
     # # image.histogram.show()
     # # image.img //= 2
-    # # for im in image.split_channels():
-    # #     im.histogram.show()
+    for im in image.split_channels():
+        im.histogram.show()
+        im.show()
     # # image.stretch_histogram(50, 100)
     # # image.stretch_histogram(0, 255)
     # image.histogram.show()
@@ -40,7 +44,6 @@ def main():
     main_window = MainWindow()
     main_window.show()
     app.exec()
-
 
 
 if __name__ == "__main__":
