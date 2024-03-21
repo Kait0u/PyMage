@@ -44,14 +44,16 @@ class ImageWindow(QMainWindow):
         self.histogram_menu = self.image_menu.addMenu("&Histogram")
 
         equalize_action = QAction("Equalize", self)
-        equalize_action.triggered.connect(self.equalize)
+        equalize_action.triggered.connect(self.equalize_histogram)
         self.histogram_menu.addAction(equalize_action)
 
         stretch_action = QAction("Stretch", self)
+        stretch_action.triggered.connect(self.stretch_histogram)
         self.histogram_menu.addAction(stretch_action)
 
         self.histogram_menu.addSeparator()
         disp_hist_action = QAction("Display", self)
+        disp_hist_action.setShortcut("Ctrl+H")
         disp_hist_action.triggered.connect(self.display_histogram)
         self.histogram_menu.addAction(disp_hist_action)
 
@@ -128,9 +130,16 @@ class ImageWindow(QMainWindow):
         # else:
         #     raise NotImplementedError("No histogram window for this image!")
 
-    def equalize(self):
+    def equalize_histogram(self):
         try:
             self.image.equalize_histogram()
+            self.refresh_image()
+        except NotImplementedError as error:
+            print(error)
+
+    def stretch_histogram(self):
+        try:
+            self.image.stretch_histogram(LMIN, LMAX)
             self.refresh_image()
         except NotImplementedError as error:
             print(error)
