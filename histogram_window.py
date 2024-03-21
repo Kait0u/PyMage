@@ -32,6 +32,8 @@ class HistogramWindow(QMainWindow):
         self.setCentralWidget(self.widget)
 
         self.plot_canvas = MplCanvas(self, width=5, height=4, dpi=100)
+        self.plot_canvas.axes.format_coord = lambda x, y: \
+            f"X = {max(np.int16(np.floor(x)), 0)}\nY = {self.histogram.array[max(0, np.int16(np.floor(x)))]}"
         self.plot_navi = NavigationToolbar(self.plot_canvas, self)
 
         self.layout.addWidget(self.plot_navi)
@@ -59,8 +61,9 @@ class HistogramWindow(QMainWindow):
 
     def draw(self, highlight_idx=None):
         self.plot_canvas.axes.clear()
+        self.plot_canvas.figure.tight_layout(pad=2)
         self.plot_canvas.axes.set_title(self.image.name)
-        self.plot_canvas.axes.set_xlim(self.histogram.min - 1, self.histogram.max)
+        self.plot_canvas.axes.set_xlim(self.histogram.min - 0.5, self.histogram.max + 0.5)
         self.plot_canvas.axes.set_ylim(0, int(np.max(self.histogram.array) * 1.1))
 
         x = np.arange(self.histogram.min, self.histogram.max + 1)
@@ -103,3 +106,6 @@ class HistogramWindow(QMainWindow):
     def closeEvent(self, event):
         self.parent_window.histogram_window = None
         WINDOW_MANAGER.remove_window(self)
+
+    def resizeEvent(self, event):
+        self.draw()
