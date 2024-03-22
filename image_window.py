@@ -123,13 +123,14 @@ class ImageWindow(QMainWindow):
         self.refresh_image()
 
     def split_rgb(self):
-        imgs = self.image.split_channels()
-        for img in imgs:
-            img_win = ImageWindow(img)
-            WINDOW_MANAGER.add_window(img_win)
-            img_win.show()
-
-
+        if not self.image.is_gray:
+            imgs = self.image.split_channels()
+            for img in imgs:
+                img_win = ImageWindow(img)
+                WINDOW_MANAGER.add_window(img_win)
+                img_win.show()
+        else:
+            print("RGB only!")
 
     def duplicate(self):
         new_image = self.image.copy()
