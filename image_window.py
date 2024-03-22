@@ -29,10 +29,14 @@ class ImageWindow(QMainWindow):
         self.type_menu = self.image_menu.addMenu("&Type")
         to_grayscale_action = QAction("To Grayscale (8b)", self)
         to_grayscale_action.triggered.connect(self.to_grayscale)
+        self.type_menu.addAction(to_grayscale_action)
         to_rgb_action = QAction("To RGB", self)
         to_rgb_action.triggered.connect(self.to_rgb)
-        self.type_menu.addAction(to_grayscale_action)
         self.type_menu.addAction(to_rgb_action)
+        self.type_menu.addSeparator()
+        split_rgb_action = QAction("Split RGB", self)
+        split_rgb_action.triggered.connect(self.split_rgb)
+        self.type_menu.addAction(split_rgb_action)
 
         self.image_menu.addSeparator()
         duplicate_action = QAction("Duplicate", self)
@@ -117,6 +121,19 @@ class ImageWindow(QMainWindow):
     def to_rgb(self):
         self.image.convert_color(ColorModes.RGB)
         self.refresh_image()
+
+    def split_rgb(self):
+        if not self.image.is_gray:
+            imgs = self.image.split_channels()
+            for img in imgs:
+                img_win = ImageWindow(img)
+                WINDOW_MANAGER.add_window(img_win)
+                img_win.show()
+
+        else:
+            print("RGB only!")
+
+
 
     def duplicate(self):
         new_image = self.image.copy()
