@@ -246,6 +246,11 @@ class Histogram:
     def array(self):
         return self.hist_array
 
+    @property
+    def array_normalized(self):
+        max_val = self.hist_array.max()
+        return self.array / max_val
+
     def show(self):
         x = np.arange(self.min, self.max + 1)
         y = self.hist_array

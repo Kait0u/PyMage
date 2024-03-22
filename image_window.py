@@ -2,7 +2,7 @@
 import numpy as np
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage, qRgb
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget, QStatusBar
 
 from image import Image, ColorModes
 from histogram_window import HistogramWindow
@@ -65,6 +65,9 @@ class ImageWindow(QMainWindow):
 
         self.image_frame = QLabel()
         self.layout.addWidget(self.image_frame)
+
+        self.status_bar = QStatusBar()
+        self.setStatusBar(self.status_bar)
 
         self.histogram_window = None
         self.refresh_image()

@@ -1,11 +1,9 @@
 import sys
-
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QMainWindow, QApplication, QToolBar, QMenuBar, QAction, QMessageBox, QDialog, QFileDialog
-
 from image_window import ImageWindow
-
 from window_manager import WINDOW_MANAGER
+
 
 class MainWindow(QMainWindow):
     def __init__(self):

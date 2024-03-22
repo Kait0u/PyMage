@@ -51,7 +51,9 @@ class HistogramWindow(QMainWindow):
         self.hist_table.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.hist_table.setSelectionMode(QAbstractItemView.SingleSelection)
         self.hist_table.setSelectionBehavior(QTableView.SelectRows)
-        self.hist_table.setColumnCount(2)  # 2 because there's a pixel value and the number of times it appeared
+
+        # 3 because there's a pixel value and the number of times it appeared and a normalized value
+        self.hist_table.setColumnCount(3)
         self.hist_table.verticalHeader().hide()
         self.hist_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.hist_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -76,15 +78,17 @@ class HistogramWindow(QMainWindow):
 
     def generate_table(self):
         self.hist_table.clear()
-        self.hist_table.setHorizontalHeaderLabels(["Brightness", "Count"])
+        self.hist_table.setHorizontalHeaderLabels(["Brightness", "Count", "Normalized"])
         size = self.histogram.array.size
         hmin = self.histogram.min
         arr = self.histogram.array
+        arr_norm = self.histogram.array_normalized
         self.hist_table.setRowCount(size)
 
         for idx in range(size):
             self.hist_table.setItem(idx, 0, QTableWidgetItem(str(hmin + idx)))
             self.hist_table.setItem(idx, 1, QTableWidgetItem(str(arr[idx])))
+            self.hist_table.setItem(idx, 2, QTableWidgetItem(f"{arr_norm[idx]:.3f}"))
 
         self.hist_table.update()
 
