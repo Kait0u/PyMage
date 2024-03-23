@@ -42,8 +42,8 @@ class MainWindow(QMainWindow):
         self.about_menu = self.menu_bar.addAction(about_action)
 
     def closeEvent(self, event):
-        event.accept()
         WINDOW_MANAGER.remove_all()
+        event.accept()
 
     def about(self):
         message = "\n".join(

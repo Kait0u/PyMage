@@ -57,6 +57,26 @@ def rgb_only(method):
     return wrapper
 
 
+def hsv_only(method):
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        if self.color_mode != ColorModes.HSV:
+            raise NotImplementedError("This operation can only be applied to HSV images!")
+        return method(self, *args, **kwargs)
+
+    return wrapper
+
+
+def lab_only(method):
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        if self.color_mode != ColorModes.LAB:
+            raise NotImplementedError("This operation can only be applied to LAB images!")
+        return method(self, *args, **kwargs)
+
+    return wrapper
+
+
 def binary_only(method):
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
@@ -204,9 +224,8 @@ class Image:
         cumsum_eq = np.uint8(np.vectorize(stretch_f)(cs))
         self.img = cumsum_eq[self.img]
 
-
     @rgb_only
-    def split_channels(self) -> tuple["Image", "Image", "Image"]:
+    def split_rgb(self) -> tuple["Image", "Image", "Image"]:
         channels = [
             Image.from_numpy(
                 self.img[:, :, idx].copy(),
@@ -215,6 +234,33 @@ class Image:
         ]
 
         return tuple(channels)
+
+    @lab_only
+    def split_lab(self) -> tuple["Image", "Image", "Image"]:
+        channels = [
+            Image.from_numpy(
+                self.img[:, :, idx].copy(),
+                f"({['L', 'A', 'B'][idx]}) {self.name}"
+            ) for idx in range(3)
+        ]
+
+        for channel in channels: channel.convert_color(ColorModes.GRAY)
+
+        return tuple(channels)
+
+    @hsv_only
+    def split_hsv(self) -> tuple["Image", "Image", "Image"]:
+        channels = [
+            Image.from_numpy(
+                self.img[:, :, idx].copy(),
+                f"({['H', 'S', 'V'][idx]}) {self.name}"
+            ) for idx in range(3)
+        ]
+
+        for channel in channels: channel.convert_color(ColorModes.GRAY)
+
+        return tuple(channels)
+
 
     def show(self):
         cv.imshow(self.name, self.img)

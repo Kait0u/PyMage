@@ -34,9 +34,16 @@ class ImageWindow(QMainWindow):
         to_rgb_action.triggered.connect(self.to_rgb)
         self.type_menu.addAction(to_rgb_action)
         self.type_menu.addSeparator()
-        split_rgb_action = QAction("Split RGB", self)
+        split_rgb_action = QAction("Split as RGB", self)
         split_rgb_action.triggered.connect(self.split_rgb)
         self.type_menu.addAction(split_rgb_action)
+        split_lab_action = QAction("Split as LAB", self)
+        split_lab_action.triggered.connect(self.split_lab)
+        self.type_menu.addAction(split_lab_action)
+        split_hsv_action = QAction("Split as HSV", self)
+        split_hsv_action.triggered.connect(self.split_hsv)
+        self.type_menu.addAction(split_hsv_action)
+
 
         self.image_menu.addSeparator()
         duplicate_action = QAction("Duplicate", self)
@@ -123,14 +130,33 @@ class ImageWindow(QMainWindow):
         self.refresh_image()
 
     def split_rgb(self):
-        if not self.image.is_gray:
-            imgs = self.image.split_channels()
-            for img in imgs:
-                img_win = ImageWindow(img)
-                WINDOW_MANAGER.add_window(img_win)
-                img_win.show()
-        else:
-            print("RGB only!")
+        new_img = self.image.copy()
+        new_img.convert_color(ColorModes.RGB)
+        imgs = new_img.split_rgb()
+        for img in imgs:
+            img_win = ImageWindow(img)
+            WINDOW_MANAGER.add_window(img_win)
+            img_win.show()
+
+    def split_lab(self):
+        new_img = self.image.copy()
+        new_img.convert_color(ColorModes.LAB)
+        imgs = new_img.split_lab()
+        for img in imgs:
+            img.stretch_histogram(LMIN, LMAX)
+            img_win = ImageWindow(img)
+            WINDOW_MANAGER.add_window(img_win)
+            img_win.show()
+
+    def split_hsv(self):
+        new_img = self.image.copy()
+        new_img.convert_color(ColorModes.HSV)
+        imgs = new_img.split_hsv()
+        for img in imgs:
+            img.stretch_histogram(LMIN, LMAX)
+            img_win = ImageWindow(img)
+            WINDOW_MANAGER.add_window(img_win)
+            img_win.show()
 
     def duplicate(self):
         new_image = self.image.copy()

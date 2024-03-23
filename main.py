@@ -22,7 +22,7 @@ def test():
     # image.convert_color(ColorModes.GRAY)
     # # image.histogram.show()
     # # image.img //= 2
-    for im in image.split_channels():
+    for im in image.split_rgb():
         im.histogram.show()
         im.show()
     # # image.stretch_histogram(50, 100)
