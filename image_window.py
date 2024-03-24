@@ -68,6 +68,14 @@ class ImageWindow(QMainWindow):
         disp_hist_action.triggered.connect(self.display_histogram)
         self.histogram_menu.addAction(disp_hist_action)
 
+        self.op_menu = self.menu_bar.addMenu("&Operations")
+
+        self.unary_menu = self.op_menu.addMenu("&Unary")
+        negate_action = QAction("Negate", self)
+        negate_action.triggered.connect(self.negate)
+        self.unary_menu.addAction(negate_action)
+
+
         self.widget = QWidget()
         self.setCentralWidget(self.widget)
 
@@ -143,7 +151,8 @@ class ImageWindow(QMainWindow):
         new_img.convert_color(ColorModes.LAB)
         imgs = new_img.split_lab()
         for img in imgs:
-            img.stretch_histogram(LMIN, LMAX)
+            try: img.stretch_histogram(LMIN, LMAX)
+            except: pass
             img_win = ImageWindow(img)
             WINDOW_MANAGER.add_window(img_win)
             img_win.show()
@@ -153,7 +162,8 @@ class ImageWindow(QMainWindow):
         new_img.convert_color(ColorModes.HSV)
         imgs = new_img.split_hsv()
         for img in imgs:
-            img.stretch_histogram(LMIN, LMAX)
+            try: img.stretch_histogram(LMIN, LMAX)
+            except: pass
             img_win = ImageWindow(img)
             WINDOW_MANAGER.add_window(img_win)
             img_win.show()
@@ -185,4 +195,11 @@ class ImageWindow(QMainWindow):
             self.image.stretch_histogram(LMIN, LMAX)
             self.refresh_image()
         except NotImplementedError as error:
+            print(error)
+
+    def negate(self):
+        try:
+            self.image.negate()
+            self.refresh_image()
+        except Exception as error:
             print(error)
