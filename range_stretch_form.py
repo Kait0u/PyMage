@@ -11,13 +11,21 @@ LMAX = 255
 
 
 class RangeStretchForm(QDialog):
-    def __init__(self):
+    def __init__(self, parent: QMainWindow | None = None):
         super().__init__()
         self.p1 = LMIN
         self.p2 = LMAX
         self.q3 = LMIN
         self.q4 = LMAX
         self.lut = np.arange(self.p1, self.p2 + 1, 1, dtype=np.uint8)
+
+        title = "Stretch Range"
+        if parent is not None:
+            title = f"{parent.image.name if parent.image is not None else parent.windowTitle()} | Stretch Range"
+
+        self.setWindowTitle(title)
+
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
 
         main_layout = QVBoxLayout()
         self.setLayout(main_layout)
@@ -55,20 +63,6 @@ class RangeStretchForm(QDialog):
 
         right_form_layout.addRow("q3", self.q3_spin_box)
         right_form_layout.addRow("q4", self.q4_spin_box)
-
-        # buttons_widget = QWidget()
-        # buttons_layout = QHBoxLayout()
-        # buttons_widget.setLayout(buttons_layout)
-        # main_layout.addWidget(buttons_widget)
-
-
-        # self.cancel_button = QPushButton("Cancel")
-        # buttons_layout.addWidget(self.cancel_button)
-        # self.cancel_button.pressed.connect(self.reject)
-        #
-        # self.ok_button = QPushButton("Apply")
-        # self.ok_button.pressed.connect(self.conditional_accept)
-        # buttons_layout.addWidget(self.ok_button)
 
         buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
         self.button_box = QDialogButtonBox(buttons)
@@ -133,11 +127,10 @@ class RangeStretchForm(QDialog):
         else: print("Invalid data")
 
     @staticmethod
-    def show_dialog() -> tuple[int, int, int, int] | None:
-        rsf = RangeStretchForm()
+    def show_dialog(parent=None) -> tuple[int, int, int, int] | None:
+        rsf = RangeStretchForm(parent)
         rsf.setModal(True)
         result = rsf.exec()
-        print(result, QDialog.Accepted)
         return (rsf.p1, rsf.p2, rsf.q3, rsf.q4) if result == QDialog.Accepted else None
 
 

@@ -216,7 +216,7 @@ class ImageWindow(QMainWindow):
 
     def stretch_range(self):
         try:
-            p1, p2, q3, q4 = RangeStretchForm.show_dialog()
+            p1, p2, q3, q4 = RangeStretchForm.show_dialog(self)
             self.image.stretch_range(p1, p2, q3, q4)
             self.refresh_image()
         except Exception as error:
