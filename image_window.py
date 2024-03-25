@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction,
 
 from image import Image, ColorModes
 from histogram_window import HistogramWindow
+from posterize_form import PosterizeForm
 from range_stretch_form import RangeStretchForm
 from window_manager import WINDOW_MANAGER
 
@@ -79,6 +80,10 @@ class ImageWindow(QMainWindow):
         stretch_range_action = QAction("Stretch range", self)
         stretch_range_action.triggered.connect(self.stretch_range)
         self.unary_menu.addAction(stretch_range_action)
+
+        posterize_action = QAction("Posterize", self)
+        posterize_action.triggered.connect(self.posterize)
+        self.unary_menu.addAction(posterize_action)
 
 
         # Actual UI
@@ -221,3 +226,12 @@ class ImageWindow(QMainWindow):
             self.refresh_image()
         except Exception as error:
             print(error)
+
+    def posterize(self):
+        try:
+            lvls = PosterizeForm.show_dialog(self)
+            self.image.posterize(lvls)
+            self.refresh_image()
+        except Exception as error:
+            print(error)
+

@@ -1,8 +1,7 @@
 import numpy as np
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QSpacerItem, QTableWidget, QGroupBox, QScrollArea, \
-    QTableView, QAbstractItemView, QTableWidgetItem, QHeaderView, QFormLayout, QHBoxLayout, QSpinBox, QPushButton, \
-    QDialog, QDialogButtonBox
+from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QHBoxLayout, QSpinBox,
+                             QDialog, QDialogButtonBox)
 
 from mplcanvas import MplCanvas
 
@@ -118,9 +117,6 @@ class RangeStretchForm(QDialog):
     def q4_value_changed(self, val):
         self.q4 = val
         self.update_data()
-
-    def conditional_accept(self):
-        if self.is_data_valid: self.accept()
 
     def accept(self):
         if self.is_data_valid: super().accept()

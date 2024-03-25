@@ -270,6 +270,23 @@ class Image:
         self.apply_lut(lut)
 
     @grayscale_only
+    def posterize(self, levels_of_grayness: int):
+        length = LMAX - LMIN + 1
+        bins = np.floor(np.linspace(LMIN, LMAX, levels_of_grayness, True)).astype(np.uint8)
+        per_bin = LMAX // levels_of_grayness
+
+        lut = []
+        for idx in range(levels_of_grayness):
+            lut += per_bin * [bins[idx]]
+
+        while len(lut) < length:
+            lut.append(bins[-1])
+
+        lut = np.array(lut)
+        self.apply_lut(lut)
+
+
+    @grayscale_only
     def apply_lut(self, lut: np.ndarray):
         self.img = lut[self.img]
 
