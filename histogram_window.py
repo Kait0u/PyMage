@@ -3,21 +3,9 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QSpacerItem, QTableWidget, QGroupBox, QScrollArea, \
     QTableView, QAbstractItemView, QTableWidgetItem, QHeaderView
 
-import matplotlib
-matplotlib.use('Qt5Agg')
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_qt5agg \
-    import (FigureCanvasQTAgg as FigureCanvas,
-            NavigationToolbar2QT as NavigationToolbar)
-
+from mplcanvas import MplCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from window_manager import WINDOW_MANAGER
-
-
-class MplCanvas(FigureCanvas):
-    def __init__(self, parent=None, width=5, height=4, dpi=100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
-        super(MplCanvas, self).__init__(fig)
 
 
 class HistogramWindow(QMainWindow):
@@ -110,6 +98,7 @@ class HistogramWindow(QMainWindow):
     def closeEvent(self, event):
         self.parent_window.histogram_window = None
         WINDOW_MANAGER.remove_window(self)
+        event.accept()
 
     def resizeEvent(self, event):
         self.draw()

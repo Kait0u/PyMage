@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction,
 
 from image import Image, ColorModes
 from histogram_window import HistogramWindow
+from range_stretch_form import RangeStretchForm
 from window_manager import WINDOW_MANAGER
 
 LMIN = 0
@@ -75,6 +76,12 @@ class ImageWindow(QMainWindow):
         negate_action.triggered.connect(self.negate)
         self.unary_menu.addAction(negate_action)
 
+        stretch_range_action = QAction("Stretch range", self)
+        stretch_range_action.triggered.connect(self.stretch_range)
+        self.unary_menu.addAction(stretch_range_action)
+
+
+        # Actual UI
 
         self.widget = QWidget()
         self.setCentralWidget(self.widget)
@@ -106,8 +113,11 @@ class ImageWindow(QMainWindow):
         return new_window
 
     def closeEvent(self, event):
+        if self.histogram_window is not None:
+            self.histogram_window.close()
         event.accept()
         WINDOW_MANAGER.remove_window(self)
+
 
     def refresh_image(self):
         color_format = QImage.Format_RGB888 if self.image.color_mode != ColorModes.GRAY else QImage.Format_Grayscale8
@@ -200,6 +210,14 @@ class ImageWindow(QMainWindow):
     def negate(self):
         try:
             self.image.negate()
+            self.refresh_image()
+        except Exception as error:
+            print(error)
+
+    def stretch_range(self):
+        try:
+            p1, p2, q3, q4 = RangeStretchForm.show_dialog()
+            self.image.stretch_range(p1, p2, q3, q4)
             self.refresh_image()
         except Exception as error:
             print(error)

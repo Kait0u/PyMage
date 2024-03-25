@@ -8,35 +8,18 @@ import cv2 as cv
 
 # from image_window import ImageWindow
 from main_window import MainWindow
+from range_stretch_form import RangeStretchForm
 
 
 def test():
     p = r"C:\Users\jjaw-\Downloads\harold.jpg"
     # p = r"C:\Users\jjaw-\Downloads\lena.png"
 
-    image = Image.from_file(p)
-    image.convert_color(ColorModes.LAB)
-    image.convert_color(ColorModes.RGB)
-    image.show()
-
-    # image.convert_color(ColorModes.GRAY)
-    # # image.histogram.show()
-    # # image.img //= 2
-    for im in image.split_rgb():
-        im.histogram.show()
-        im.show()
-    # # image.stretch_histogram(50, 100)
-    # # image.stretch_histogram(0, 255)
-    # image.histogram.show()
-    # image.show()
-    # image.equalize_histogram()
-    # image.histogram.show()
-    # image.show()
-
-    # app = QApplication(sys.argv)
-    # win = ImageWindow.from_path(p, True)
-    # win.show()
-    # app.exec()
+    app = QApplication(sys.argv)
+    rsf = RangeStretchForm()
+    rsf.show()
+    # print(rsf.p1)
+    app.exec()
 
 
 def main():

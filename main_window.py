@@ -28,6 +28,7 @@ class MainWindow(QMainWindow):
 
         exit_action = QAction("&Exit", self)
         exit_action.setShortcut("Ctrl+Q")
+        exit_action.triggered.connect(self.close)
         exit_action.setStatusTip("Exits the application")
 
         self.file_menu = self.menu_bar.addMenu("&File")

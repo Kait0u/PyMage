@@ -261,6 +261,17 @@ class Image:
 
         return tuple(channels)
 
+    @grayscale_only
+    def stretch_range(self, p1: int, p2: int, q3: int, q4: int):
+        lut = np.arange(LMIN, LMAX + 1, 1, dtype=np.uint8)
+        new_slice = np.floor(np.linspace(q3, q4, p2 - p1 + 1, True))
+        lut[p1: p2 + 1] = new_slice
+
+        self.apply_lut(lut)
+
+    @grayscale_only
+    def apply_lut(self, lut: np.ndarray):
+        self.img = lut[self.img]
 
     def show(self):
         cv.imshow(self.name, self.img)
