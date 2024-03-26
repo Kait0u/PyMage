@@ -4,7 +4,9 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage, qRgb
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget, QStatusBar
 
-from image import Image, ColorModes
+from blur_form import BlurForm
+from gblur_form import GBlurForm
+from image import Image, ColorModes, Padding
 from histogram_window import HistogramWindow
 from posterize_form import PosterizeForm
 from range_stretch_form import RangeStretchForm
@@ -71,8 +73,8 @@ class ImageWindow(QMainWindow):
         self.histogram_menu.addAction(disp_hist_action)
 
         self.op_menu = self.menu_bar.addMenu("&Operations")
-
         self.unary_menu = self.op_menu.addMenu("&Unary")
+
         negate_action = QAction("Negate", self)
         negate_action.triggered.connect(self.negate)
         self.unary_menu.addAction(negate_action)
@@ -84,6 +86,16 @@ class ImageWindow(QMainWindow):
         posterize_action = QAction("Posterize", self)
         posterize_action.triggered.connect(self.posterize)
         self.unary_menu.addAction(posterize_action)
+
+        self.neighb_menu = self.op_menu.addMenu("&Neighborhood")
+
+        blur_action = QAction("Blur", self)
+        blur_action.triggered.connect(self.blur)
+        self.neighb_menu.addAction(blur_action)
+
+        gblur_action = QAction("Gaussian Blur", self)
+        gblur_action.triggered.connect(self.gblur)
+        self.neighb_menu.addAction(gblur_action)
 
 
         # Actual UI
@@ -235,3 +247,18 @@ class ImageWindow(QMainWindow):
         except Exception as error:
             print(error)
 
+    def blur(self):
+        try:
+            size = BlurForm.show_dialog(self)
+            self.image.blur(size)
+            self.refresh_image()
+        except Exception as error:
+            print(error)
+
+    def gblur(self):
+        try:
+            kernel_size, sigma_x, sigma_y, padding = GBlurForm.show_dialog(self)
+            self.image.gaussian_blur(kernel_size, sigma_x, sigma_y, padding)
+            self.refresh_image()
+        except Exception as error:
+            print(error)

@@ -36,6 +36,12 @@ COLOR_CONVERSION_MODES = {
 }
 
 
+class Padding(Enum):
+    REFLECT = cv.BORDER_REFLECT
+    ISOLATED = cv.BORDER_ISOLATED
+    REPLICATE = cv.BORDER_REPLICATE
+
+
 def grayscale_only(method):
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
@@ -285,10 +291,21 @@ class Image:
         lut = np.array(lut)
         self.apply_lut(lut)
 
-
     @grayscale_only
     def apply_lut(self, lut: np.ndarray):
         self.img = lut[self.img]
+
+    def blur(self, kernel_size: int):
+        self.img = cv.blur(self.img, (kernel_size, kernel_size))
+
+    def gaussian_blur(self, kernel_size: int, sigma_x: float, sigma_y: float | None, padding: Padding):
+        if sigma_y is None: sigma_y = sigma_x
+        ksize = (kernel_size, kernel_size)
+        self.img = cv.GaussianBlur(self.img, ksize=ksize, sigmaX=sigma_x, sigmaY=sigma_y, borderType=padding.value)
+
+    @grayscale_only
+    def convolve(self, kernel: np.ndarray):
+        ...
 
     def show(self):
         cv.imshow(self.name, self.img)
