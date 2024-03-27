@@ -42,6 +42,11 @@ class Padding(Enum):
     REPLICATE = cv.BORDER_REPLICATE
 
 
+class DesiredDepth(Enum):
+    U8 = cv.CV_8U
+    F64 = cv.CV_64F
+
+
 def grayscale_only(method):
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
@@ -302,6 +307,21 @@ class Image:
         if sigma_y is None: sigma_y = sigma_x
         ksize = (kernel_size, kernel_size)
         self.img = cv.GaussianBlur(self.img, ksize=ksize, sigmaX=sigma_x, sigmaY=sigma_y, borderType=padding.value)
+
+    @grayscale_only
+    def laplacian(self, kernel_size: int, ddepth: DesiredDepth, padding: Padding):
+        self.img = cv.Laplacian(self.img, ddepth=ddepth.value, ksize=kernel_size, borderType=padding.value)
+
+    @grayscale_only
+    def sobel(self, kernel_size: int, ddepth: DesiredDepth, padding: Padding):
+        sobel_x = cv.Sobel(self.img, ddepth.value, dx=1, dy=0, ksize=kernel_size, borderType=padding.value)
+        sobel_y = cv.Sobel(self.img, ddepth.value, dx=0, dy=1, ksize=kernel_size, borderType=padding.value)
+        self.img = cv.addWeighted(sobel_x, 0.5, sobel_y, 0.5, 0)
+
+    @grayscale_only
+    def canny(self, threshold1: int, threshold2: int):
+        self.img = cv.Canny(self.img, threshold1, threshold2)
+
 
     @grayscale_only
     def convolve(self, kernel: np.ndarray):
