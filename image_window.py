@@ -251,7 +251,9 @@ class ImageWindow(QMainWindow):
 
     def stretch_range(self):
         try:
-            p1, p2, q3, q4 = RangeStretchForm.show_dialog(self)
+            result = RangeStretchForm.show_dialog(self)
+            if result is None: return
+            p1, p2, q3, q4 = result
             self.image.stretch_range(p1, p2, q3, q4)
             self.refresh_image()
         except Exception as error:
@@ -259,7 +261,9 @@ class ImageWindow(QMainWindow):
 
     def posterize(self):
         try:
-            lvls = PosterizeForm.show_dialog(self)
+            result = PosterizeForm.show_dialog(self)
+            if result is None: return
+            lvls = result
             self.image.posterize(lvls)
             self.refresh_image()
         except Exception as error:
@@ -267,7 +271,9 @@ class ImageWindow(QMainWindow):
 
     def blur(self):
         try:
-            size = BlurForm.show_dialog(self)
+            result = BlurForm.show_dialog(self)
+            if result is None: return
+            size = result
             self.image.blur(size)
             self.refresh_image()
         except Exception as error:
@@ -275,7 +281,9 @@ class ImageWindow(QMainWindow):
 
     def gblur(self):
         try:
-            kernel_size, sigma_x, sigma_y, padding = GBlurForm.show_dialog(self)
+            result = GBlurForm.show_dialog(self)
+            if result is None: return
+            kernel_size, sigma_x, sigma_y, padding = result
             self.image.gaussian_blur(kernel_size, sigma_x, sigma_y, padding)
             self.refresh_image()
         except Exception as error:
@@ -284,7 +292,9 @@ class ImageWindow(QMainWindow):
     def sobel(self):
         try:
             self.check_gray()
-            kernel_size, ddepth, padding = SobelForm.show_dialog(self)
+            result = SobelForm.show_dialog(self)
+            if result is None: return
+            kernel_size, ddepth, padding = result
             self.image.sobel(kernel_size, ddepth, padding)
             self.refresh_image()
         except Exception as error:
@@ -293,7 +303,9 @@ class ImageWindow(QMainWindow):
     def laplacian(self):
         try:
             self.check_gray()
-            kernel_size, ddepth, padding = LaplacianForm.show_dialog(self)
+            result = LaplacianForm.show_dialog(self)
+            if result is None: return
+            kernel_size, ddepth, padding = result
             self.image.laplacian(kernel_size, ddepth, padding)
             self.refresh_image()
         except Exception as error:
