@@ -8,8 +8,10 @@ from blur_form import BlurForm
 from gblur_form import GBlurForm
 from image import Image, ColorModes, Padding
 from histogram_window import HistogramWindow
+from laplacian_form import LaplacianForm
 from posterize_form import PosterizeForm
 from range_stretch_form import RangeStretchForm
+from sobel_form import SobelForm
 from window_manager import WINDOW_MANAGER
 
 LMIN = 0
@@ -97,6 +99,16 @@ class ImageWindow(QMainWindow):
         gblur_action.triggered.connect(self.gblur)
         self.neighb_menu.addAction(gblur_action)
 
+        self.neighb_menu.addSeparator()
+
+        laplacian_action = QAction("Laplacian", self)
+        laplacian_action.triggered.connect(self.laplacian)
+        self.neighb_menu.addAction(laplacian_action)
+
+        sobel_action = QAction("Sobel", self)
+        sobel_action.triggered.connect(self.sobel)
+        self.neighb_menu.addAction(sobel_action)
+
 
         # Actual UI
 
@@ -135,6 +147,9 @@ class ImageWindow(QMainWindow):
         event.accept()
         WINDOW_MANAGER.remove_window(self)
 
+    def check_gray(self):
+        if not self.image.is_gray:
+            raise Exception("Image is not a grayscale image")
 
     def refresh_image(self):
         color_format = QImage.Format_RGB888 if self.image.color_mode != ColorModes.GRAY else QImage.Format_Grayscale8
@@ -203,10 +218,13 @@ class ImageWindow(QMainWindow):
         new_window.show()
 
     def display_histogram(self):
-        if self.image.is_gray:
+        try:
+            self.check_gray()
             self.histogram_window = HistogramWindow(self)
             WINDOW_MANAGER.add_window(self.histogram_window)
             self.histogram_window.show()
+        except Exception as error:
+            print(error)
         # else:
         #     raise NotImplementedError("No histogram window for this image!")
 
@@ -259,6 +277,24 @@ class ImageWindow(QMainWindow):
         try:
             kernel_size, sigma_x, sigma_y, padding = GBlurForm.show_dialog(self)
             self.image.gaussian_blur(kernel_size, sigma_x, sigma_y, padding)
+            self.refresh_image()
+        except Exception as error:
+            print(error)
+
+    def sobel(self):
+        try:
+            self.check_gray()
+            kernel_size, ddepth, padding = SobelForm.show_dialog(self)
+            self.image.sobel(kernel_size, ddepth, padding)
+            self.refresh_image()
+        except Exception as error:
+            print(error)
+
+    def laplacian(self):
+        try:
+            self.check_gray()
+            kernel_size, ddepth, padding = LaplacianForm.show_dialog(self)
+            self.image.laplacian(kernel_size, ddepth, padding)
             self.refresh_image()
         except Exception as error:
             print(error)
