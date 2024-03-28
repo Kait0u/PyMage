@@ -5,6 +5,7 @@ from PyQt5.QtGui import QPixmap, QImage, qRgb
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget, QStatusBar
 
 from blur_form import BlurForm
+from canny_form import CannyForm
 from gblur_form import GBlurForm
 from image import Image, ColorModes, Padding
 from histogram_window import HistogramWindow
@@ -101,6 +102,10 @@ class ImageWindow(QMainWindow):
 
         self.neighb_menu.addSeparator()
 
+        canny_action = QAction("Canny", self)
+        canny_action.triggered.connect(self.canny)
+        self.neighb_menu.addAction(canny_action)
+
         laplacian_action = QAction("Laplacian", self)
         laplacian_action.triggered.connect(self.laplacian)
         self.neighb_menu.addAction(laplacian_action)
@@ -108,7 +113,6 @@ class ImageWindow(QMainWindow):
         sobel_action = QAction("Sobel", self)
         sobel_action.triggered.connect(self.sobel)
         self.neighb_menu.addAction(sobel_action)
-
 
         # Actual UI
 
@@ -307,6 +311,17 @@ class ImageWindow(QMainWindow):
             if result is None: return
             kernel_size, ddepth, padding = result
             self.image.laplacian(kernel_size, ddepth, padding)
+            self.refresh_image()
+        except Exception as error:
+            print(error)
+
+    def canny(self):
+        try:
+            self.check_gray()
+            result = CannyForm.show_dialog(self)
+            if result is None: return
+            th1, th2 = result
+            self.image.canny(th1, th2)
             self.refresh_image()
         except Exception as error:
             print(error)
