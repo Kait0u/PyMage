@@ -1,5 +1,6 @@
 import numpy as np
-from PyQt5.QtWidgets import QTableWidget, QHeaderView, QAbstractItemView, QTableWidgetItem
+from PyQt5.QtWidgets import QTableWidget, QHeaderView, QAbstractItemView, QTableWidgetItem, QSpinBox, QWidget, \
+    QVBoxLayout
 from PyQt5.QtCore import Qt
 
 
@@ -29,6 +30,13 @@ class NpTableWidget(QTableWidget):
     def empty_editable(width: int, height: int) -> "NpTableWidget":
         data = np.empty((width, height))
         new_widget = NpTableWidget(data, can_edit=True)
+
+        r = height
+        c = width
+        for idx_r in range(r):
+            for idx_c in range(c):
+                item = QSpinBox()
+                new_widget.setCellWidget(idx_r, idx_c, item)
         return new_widget
 
     @property
@@ -58,17 +66,17 @@ class NpTableWidget(QTableWidget):
                 item.setTextAlignment(Qt.AlignCenter)
                 self.setItem(idx_r, idx_c, item)
 
-    def extract_numpy(self, dtype: np.dtype):
+    def extract_numpy(self):
         r = self.rowCount()
         c = self.columnCount()
 
-        data = np.zeros((r, c), dtype=dtype)
+        data = np.zeros((r, c))
 
         for idx_r in range(r):
             for idx_c in range(c):
                 try:
-                    item = self.item(idx_r, idx_c).text()
-                    data[idx_r, idx_c] = item
+                    item = self.cellWidget(idx_r, idx_c)
+                    data[idx_r, idx_c] = item.value()
                 except Exception as error:
                     print(error)
                     return
