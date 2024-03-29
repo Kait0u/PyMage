@@ -9,6 +9,7 @@ from forms.canny_form import CannyForm
 from forms.convolve_form import ConvolveForm
 from forms.gblur_form import GBlurForm
 from forms.laplasharpen_form import LaplaSharpenForm
+from forms.prewitt_form import PrewittForm
 from image import Image, ColorModes
 from histogram_window import HistogramWindow
 from forms.laplacian_form import LaplacianForm
@@ -117,7 +118,7 @@ class ImageWindow(QMainWindow):
         self.neighb_menu.addAction(sobel_action)
 
         prewitt_action = QAction("Prewitt", self)
-
+        prewitt_action.triggered.connect(self.prewitt)
         self.neighb_menu.addAction(prewitt_action)
 
         self.neighb_menu.addSeparator()
@@ -318,6 +319,17 @@ class ImageWindow(QMainWindow):
             if result is None: return
             kernel_size, ddepth, padding = result
             self.image.sobel(kernel_size, ddepth, padding)
+            self.refresh_image()
+        except Exception as error:
+            print(error)
+
+    def prewitt(self):
+        try:
+            self.check_gray()
+            result = PrewittForm.show_dialog(self)
+            if result is None: return
+            kernel, ddepth, padding = result
+            self.image.convolve(kernel, ddepth, padding)
             self.refresh_image()
         except Exception as error:
             print(error)
