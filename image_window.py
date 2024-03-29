@@ -1,18 +1,18 @@
 # import cv2 as cv
 import numpy as np
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QImage, qRgb
+from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget, QStatusBar
 
-from blur_form import BlurForm
-from canny_form import CannyForm
-from gblur_form import GBlurForm
-from image import Image, ColorModes, Padding
+from forms.blur_form import BlurForm
+from forms.canny_form import CannyForm
+from forms.gblur_form import GBlurForm
+from image import Image, ColorModes
 from histogram_window import HistogramWindow
-from laplacian_form import LaplacianForm
-from posterize_form import PosterizeForm
-from range_stretch_form import RangeStretchForm
-from sobel_form import SobelForm
+from forms.laplacian_form import LaplacianForm
+from forms.posterize_form import PosterizeForm
+from forms.range_stretch_form import RangeStretchForm
+from forms.sobel_form import SobelForm
 from window_manager import WINDOW_MANAGER
 
 LMIN = 0

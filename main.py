@@ -1,14 +1,7 @@
 import sys
-from sys import argv
-
 from PyQt5.QtWidgets import QApplication
-
-from image import Image, ColorModes
-import cv2 as cv
-
-# from image_window import ImageWindow
 from main_window import MainWindow
-from range_stretch_form import RangeStretchForm
+from forms.range_stretch_form import RangeStretchForm
 
 
 def test():
