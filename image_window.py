@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction,
 from forms.blur_form import BlurForm
 from forms.canny_form import CannyForm
 from forms.gblur_form import GBlurForm
+from forms.laplasharpen_form import LaplaSharpenForm
 from image import Image, ColorModes
 from histogram_window import HistogramWindow
 from forms.laplacian_form import LaplacianForm
@@ -113,6 +114,12 @@ class ImageWindow(QMainWindow):
         sobel_action = QAction("Sobel", self)
         sobel_action.triggered.connect(self.sobel)
         self.neighb_menu.addAction(sobel_action)
+
+        self.neighb_menu.addSeparator()
+
+        laplasharpen_action = QAction("LaplaSharpen", self)
+        laplasharpen_action.triggered.connect(self.laplasharpen)
+        self.neighb_menu.addAction(laplasharpen_action)
 
         # Actual UI
 
@@ -325,3 +332,15 @@ class ImageWindow(QMainWindow):
             self.refresh_image()
         except Exception as error:
             print(error)
+
+    def laplasharpen(self):
+        try:
+            self.check_gray()
+            result = LaplaSharpenForm.show_dialog(self)
+            if result is None: return
+            kernel, ddepth, padding = result
+            self.image.convolve(kernel, ddepth, padding)
+            self.refresh_image()
+        except Exception as error:
+            print(error)
+

@@ -322,10 +322,10 @@ class Image:
     def canny(self, threshold1: int, threshold2: int):
         self.img = cv.Canny(self.img, threshold1, threshold2)
 
-
     @grayscale_only
-    def convolve(self, kernel: np.ndarray):
-        ...
+    def convolve(self, kernel: np.ndarray, ddepth: DesiredDepth, padding: Padding, normalize: bool = True):
+        normalizer = max(kernel.sum(), 1) if normalize else 1
+        self.img = cv.filter2D(self.img, ddepth.value, kernel / normalizer, borderType=padding.value)
 
     def show(self):
         cv.imshow(self.name, self.img)
