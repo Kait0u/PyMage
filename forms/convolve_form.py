@@ -89,6 +89,10 @@ class ConvolveForm(QDialog):
     def update_filter(self):
         self.filter = self.filter_table.extract_numpy()
 
+    def accept(self):
+        if self.is_data_valid: super().accept()
+        else: print("Invalid data")
+
     @staticmethod
     def show_dialog(parent=None) -> tuple[np.ndarray, DesiredDepth, Padding] | None:
         cf = ConvolveForm(parent)

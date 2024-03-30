@@ -90,6 +90,10 @@ class LaplaSharpenForm(QDialog):
     def ddepth_idx_changed(self, idx):
         self.ddepth = self.ddepth_options[idx]
 
+    def accept(self):
+        if self.is_data_valid: super().accept()
+        else: print("Invalid data")
+
     @staticmethod
     def show_dialog(parent=None) -> tuple[np.ndarray, DesiredDepth, Padding] | None:
         lsf = LaplaSharpenForm(parent)

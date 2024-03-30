@@ -56,6 +56,10 @@ class CannyForm(QDialog):
     def th2_value_changed(self, val):
         self.threshold2 = val
 
+    def accept(self):
+        if self.is_data_valid: super().accept()
+        else: print("Invalid data")
+
     @staticmethod
     def show_dialog(parent=None) -> tuple[int, int] | None:
         cf = CannyForm(parent)
