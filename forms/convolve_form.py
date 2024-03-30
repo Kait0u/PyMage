@@ -89,6 +89,12 @@ class ConvolveForm(QDialog):
     def update_filter(self):
         self.filter = self.filter_table.extract_numpy()
 
+    @property
+    def is_data_valid(self):
+        c1 = self.ddepth in self.ddepth_options
+        c2 = self.padding in self.padding_options
+        return c1 and c2
+
     def accept(self):
         if self.is_data_valid: super().accept()
         else: print("Invalid data")

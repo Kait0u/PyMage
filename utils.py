@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.signal import convolve2d
 
 
 def cumsum(arr: np.array) -> np.ndarray:
@@ -11,3 +12,8 @@ def cumsum(arr: np.array) -> np.ndarray:
         csum[idx + 1] = csum[idx] + val
 
     return csum
+
+
+def convolve_filters(f1: np.ndarray, f2: np.ndarray) -> np.ndarray:
+    return convolve2d(f1, f2, mode="full")
+

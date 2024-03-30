@@ -11,6 +11,7 @@ from forms.gblur_form import GBlurForm
 from forms.laplasharpen_form import LaplaSharpenForm
 from forms.median_form import MedianForm
 from forms.prewitt_form import PrewittForm
+from forms.two_stage_filter_form import TwoStageFilterForm
 from image import Image, ColorModes
 from histogram_window import HistogramWindow
 from forms.laplacian_form import LaplacianForm
@@ -139,6 +140,10 @@ class ImageWindow(QMainWindow):
         convolve_action = QAction("Convolve", self)
         convolve_action.triggered.connect(self.convolve)
         self.neighb_menu.addAction(convolve_action)
+
+        two_stage_filter_action = QAction("Two Stage Filter", self)
+        two_stage_filter_action.triggered.connect(self.two_stage_filter)
+        self.neighb_menu.addAction(two_stage_filter_action)
 
         # Actual UI
 
@@ -378,6 +383,17 @@ class ImageWindow(QMainWindow):
         try:
             self.check_gray()
             result = ConvolveForm.show_dialog(self)
+            if result is None: return
+            kernel, ddepth, padding = result
+            self.image.convolve(kernel, ddepth, padding)
+            self.refresh_image()
+        except Exception as error:
+            print(error)
+
+    def two_stage_filter(self):
+        try:
+            self.check_gray()
+            result = TwoStageFilterForm.show_dialog(self)
             if result is None: return
             kernel, ddepth, padding = result
             self.image.convolve(kernel, ddepth, padding)

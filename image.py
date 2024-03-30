@@ -340,8 +340,6 @@ class Image:
         temp = cv.medianBlur(temp, size)
         self.img = temp[padding_size:-padding_size, padding_size:-padding_size]
 
-
-
     def show(self):
         cv.imshow(self.name, self.img)
         cv.waitKey(0)
