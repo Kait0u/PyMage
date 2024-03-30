@@ -327,6 +327,21 @@ class Image:
         normalizer = max(kernel.sum(), 1) if normalize else 1
         self.img = cv.filter2D(self.img, ddepth.value, kernel / normalizer, borderType=padding.value)
 
+    def median(self, size: int, padding: Padding):
+        if not (size > 1 and size % 2 == 1):
+            raise ValueError("Invalid size!")
+        padding_size = (size - 1) // 2
+        temp = cv.copyMakeBorder(self.img,
+                                 top=padding_size,
+                                 bottom=padding_size,
+                                 left=padding_size,
+                                 right=padding_size,
+                                 borderType=padding.value)
+        temp = cv.medianBlur(temp, size)
+        self.img = temp[padding_size:-padding_size, padding_size:-padding_size]
+
+
+
     def show(self):
         cv.imshow(self.name, self.img)
         cv.waitKey(0)
