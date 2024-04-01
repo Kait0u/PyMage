@@ -174,6 +174,10 @@ class ImageWindow(QMainWindow):
         xor_action.triggered.connect(self.bitwise_xor_image)
         self.arithmetic_menu.addAction(xor_action)
 
+        not_action = QAction("NOT", self)
+        not_action.triggered.connect(self.bitwise_not_image)
+        self.arithmetic_menu.addAction(not_action)
+
 
         # Actual UI
 
@@ -506,6 +510,19 @@ class ImageWindow(QMainWindow):
             if result is None: return
             im1, im2, name = result
             new_image = Image.bitwise_xor_images(im1, im2, name)
+            new_window = ImageWindow(new_image)
+            new_window.show()
+        except Exception as error:
+            ErrorBox(error)
+
+    def bitwise_not_image(self):
+        from forms.bitwise_not_form import BitwiseNotForm
+
+        try:
+            result = BitwiseNotForm.show_dialog(self)
+            if result is None: return
+            im, name = result
+            new_image = Image.bitwise_not_image(im, name)
             new_window = ImageWindow(new_image)
             new_window.show()
         except Exception as error:
