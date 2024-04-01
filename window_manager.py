@@ -21,7 +21,6 @@ class WindowManager:
     def remove_all(self):
         self.image_windows.clear()
         self.windows.clear()
-        self.image_windows.clear()
 
 
 WINDOW_MANAGER = WindowManager()
