@@ -178,7 +178,7 @@ class BlendForm(QDialog):
         return False
 
     def same_size(self):
-        if self.image1.img.shape == self.image2.img.shape:
+        if self.image1.img.shape[:2] == self.image2.img.shape[:2]:
             return True
         ErrorBox("Incompatible images. Size mismatch.")
         return False

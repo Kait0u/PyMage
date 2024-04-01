@@ -1,6 +1,9 @@
 import sys
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QMainWindow, QApplication, QToolBar, QMenuBar, QAction, QMessageBox, QDialog, QFileDialog
+
+import image_arithmetic
+from error_box import ErrorBox
 from image_window import ImageWindow
 from window_manager import WINDOW_MANAGER
 
@@ -36,6 +39,40 @@ class MainWindow(QMainWindow):
         self.file_menu.addAction(open_color_action)
         self.file_menu.addSeparator()
         self.file_menu.addAction(exit_action)
+
+        self.arithmetic_menu = self.menu_bar.addMenu("Arithmetic")
+
+        add_action = QAction("Add", self)
+        add_action.triggered.connect(lambda: attempt(image_arithmetic.add_image))
+        self.arithmetic_menu.addAction(add_action)
+
+        sub_action = QAction("Subtract", self)
+        sub_action.triggered.connect(lambda: attempt(image_arithmetic.subtract_image))
+        self.arithmetic_menu.addAction(sub_action)
+
+        blend_action = QAction("Blend", self)
+        blend_action.triggered.connect(lambda: attempt(image_arithmetic.blend_image))
+        self.arithmetic_menu.addAction(blend_action)
+
+        self.arithmetic_menu.addSeparator()
+
+        and_action = QAction("AND", self)
+        and_action.triggered.connect(lambda: attempt(image_arithmetic.bitwise_and_image))
+        self.arithmetic_menu.addAction(and_action)
+
+        or_action = QAction("OR", self)
+        or_action.triggered.connect(lambda: attempt(image_arithmetic.bitwise_or_image))
+        self.arithmetic_menu.addAction(or_action)
+
+        xor_action = QAction("XOR", self)
+        xor_action.triggered.connect(lambda: attempt(image_arithmetic.bitwise_xor_image))
+        self.arithmetic_menu.addAction(xor_action)
+
+        not_action = QAction("NOT", self)
+        not_action.triggered.connect(lambda: attempt(image_arithmetic.bitwise_not_image))
+        self.arithmetic_menu.addAction(not_action)
+
+        # About
 
         about_action = QAction("&About", self)
         about_action.setShortcut("F1")
@@ -89,14 +126,17 @@ class MainWindow(QMainWindow):
         path = self.open_file_dialog()
         if path is not None:
             imgwin = ImageWindow.from_path(path, True)
-            # WINDOW_MANAGER.add_window(imgwin)
-            # imgwin.setParent(self)
             imgwin.show()
 
     def open_image_color(self):
         path = self.open_file_dialog()
         if path is not None:
             imgwin = ImageWindow.from_path(path, False)
-            # WINDOW_MANAGER.add_window(imgwin)
-            # imgwin.setParent(self)
             imgwin.show()
+
+
+def attempt(f):
+    try:
+        f()
+    except Exception as error:
+        ErrorBox(error)

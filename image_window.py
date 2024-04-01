@@ -455,92 +455,56 @@ class ImageWindow(QMainWindow):
             ErrorBox(error)
 
     def add_image(self):
-        from forms.image_arithmetics_form import ImageArithmeticsForm
-
+        from image_arithmetic import add_image
         try:
-            result = ImageArithmeticsForm.show_dialog("+", self)
-            if result is None: return
-            im1, im2, name = result
-            new_image = Image.add_images(im1, im2, name)
-            new_window = ImageWindow(new_image)
-            new_window.show()
+            add_image(self)
         except Exception as error:
             ErrorBox(error)
 
     def subtract_image(self):
-        from forms.image_arithmetics_form import ImageArithmeticsForm
+        from image_arithmetic import subtract_image
 
         try:
-            result = ImageArithmeticsForm.show_dialog("-", self)
-            if result is None: return
-            im1, im2, name = result
-            new_image = Image.subtract_images(im1, im2, name)
-            new_window = ImageWindow(new_image)
-            new_window.show()
+            subtract_image(self)
         except Exception as error:
             ErrorBox(error)
 
     def bitwise_and_image(self):
-        from forms.image_arithmetics_form import ImageArithmeticsForm
+        from image_arithmetic import bitwise_and_image
 
         try:
-            result = ImageArithmeticsForm.show_dialog("AND", self)
-            if result is None: return
-            im1, im2, name = result
-            new_image = Image.bitwise_and_images(im1, im2, name)
-            new_window = ImageWindow(new_image)
-            new_window.show()
+            bitwise_and_image(self)
         except Exception as error:
             ErrorBox(error)
 
     def bitwise_or_image(self):
-        from forms.image_arithmetics_form import ImageArithmeticsForm
+        from image_arithmetic import bitwise_or_image
 
         try:
-            result = ImageArithmeticsForm.show_dialog("OR", self)
-            if result is None: return
-            im1, im2, name = result
-            new_image = Image.bitwise_or_images(im1, im2, name)
-            new_window = ImageWindow(new_image)
-            new_window.show()
+            bitwise_or_image(self)
         except Exception as error:
             ErrorBox(error)
 
     def bitwise_xor_image(self):
-        from forms.image_arithmetics_form import ImageArithmeticsForm
+        from image_arithmetic import bitwise_xor_image
 
         try:
-            result = ImageArithmeticsForm.show_dialog("XOR", self)
-            if result is None: return
-            im1, im2, name = result
-            new_image = Image.bitwise_xor_images(im1, im2, name)
-            new_window = ImageWindow(new_image)
-            new_window.show()
+            bitwise_xor_image(self)
         except Exception as error:
             ErrorBox(error)
 
     def bitwise_not_image(self):
-        from forms.bitwise_not_form import BitwiseNotForm
+        from image_arithmetic import bitwise_not_image
 
         try:
-            result = BitwiseNotForm.show_dialog(self)
-            if result is None: return
-            im, name = result
-            new_image = Image.bitwise_not_image(im, name)
-            new_window = ImageWindow(new_image)
-            new_window.show()
+            bitwise_not_image(self)
         except Exception as error:
             ErrorBox(error)
 
     def blend_image(self):
-        from forms.blend_form import BlendForm
+        from image_arithmetic import blend_image
 
         try:
-            result = BlendForm.show_dialog(self)
-            if result is None: return
-            im1, im2, alpha, beta, gamma, name = result
-            new_image = Image.blend_images(im1, alpha, im2, beta, gamma, name)
-            new_window = ImageWindow(new_image)
-            new_window.show()
+            blend_image(self)
         except Exception as error:
             ErrorBox(error)

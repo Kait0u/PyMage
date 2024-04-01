@@ -9,7 +9,7 @@ from forms.form_widgets.window_preview import WindowPreview
 from image import Image
 
 
-class ImageArithmeticsForm(QDialog):
+class ImageArithmeticForm(QDialog):
     def __init__(self, operator_string: str, callee: QMainWindow | None = None):
         super().__init__()
         self.image1: Image = None
@@ -138,7 +138,7 @@ class ImageArithmeticsForm(QDialog):
         return False
 
     def same_size(self):
-        if self.image1.img.shape == self.image2.img.shape:
+        if self.image1.img.shape[:2] == self.image2.img.shape[:2]:
             return True
         ErrorBox("Incompatible images. Size mismatch.")
         return False
@@ -153,7 +153,7 @@ class ImageArithmeticsForm(QDialog):
 
     @staticmethod
     def show_dialog(operator_string: str, callee: QMainWindow = None) -> tuple[Image, Image, str] | None:
-        iaf = ImageArithmeticsForm(operator_string, callee)
+        iaf = ImageArithmeticForm(operator_string, callee)
         iaf.setModal(True)
         result = iaf.exec()
         return (iaf.image1, iaf.image2, iaf.result_name) \

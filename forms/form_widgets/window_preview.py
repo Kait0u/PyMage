@@ -22,8 +22,7 @@ class WindowPreview(QWidget):
             self.curr_image_window: ImageWindow = self.image_windows[0]
             self.image: Image = self.curr_image_window.image
         except IndexError:
-            ErrorBox("No image window is open!")
-            self.close()
+            raise Exception("No image window is open!")
 
         self.image_frame = QLabel()
         self.image_frame.setMinimumSize(MAX_SIZE, MAX_SIZE)
@@ -84,5 +83,4 @@ class WindowPreview(QWidget):
         if window in self.image_windows:
             idx = self.image_windows.index(window)
             self.image_window_combobox.setCurrentIndex(idx)
-            # self.update_curr_window(idx)
             self.refresh_image()
