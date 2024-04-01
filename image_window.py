@@ -28,9 +28,12 @@ SCALING = [25, 50, 100, 150, 200]
 class ImageWindow(QMainWindow):
     def __init__(self, image: Image):
         super().__init__()
+        WINDOW_MANAGER.add_window(self)
+        self.id = WINDOW_MANAGER.generate_uid(self)
+
         self.image = image
 
-        self.setWindowTitle(self.image.name)
+        self.setWindowTitle(f"{self.image.name} ({self.id}) | PyMage")
         # self.resize(self.image.width, self.image.height)
 
         self.menu_bar = QMenuBar(self)
@@ -249,14 +252,14 @@ class ImageWindow(QMainWindow):
         new_image = self.image.copy()
         new_image.name += "_duplicate"
         new_window = ImageWindow(new_image)
-        WINDOW_MANAGER.add_window(new_window)
+        # WINDOW_MANAGER.add_window(new_window)
         new_window.show()
 
     def display_histogram(self):
         try:
             self.check_gray()
             self.histogram_window = HistogramWindow(self)
-            WINDOW_MANAGER.add_window(self.histogram_window)
+            # WINDOW_MANAGER.add_window(self.histogram_window)
             self.histogram_window.show()
         except Exception as error:
             ErrorBox(error)

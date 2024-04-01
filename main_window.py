@@ -89,7 +89,7 @@ class MainWindow(QMainWindow):
         path = self.open_file_dialog()
         if path is not None:
             imgwin = ImageWindow.from_path(path, True)
-            WINDOW_MANAGER.add_window(imgwin)
+            # WINDOW_MANAGER.add_window(imgwin)
             # imgwin.setParent(self)
             imgwin.show()
 
@@ -97,6 +97,6 @@ class MainWindow(QMainWindow):
         path = self.open_file_dialog()
         if path is not None:
             imgwin = ImageWindow.from_path(path, False)
-            WINDOW_MANAGER.add_window(imgwin)
+            # WINDOW_MANAGER.add_window(imgwin)
             # imgwin.setParent(self)
             imgwin.show()

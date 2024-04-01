@@ -11,6 +11,7 @@ from window_manager import WINDOW_MANAGER
 class HistogramWindow(QMainWindow):
     def __init__(self, parent: QMainWindow):
         super().__init__()
+        WINDOW_MANAGER.add_window(self)
         self.parent_window = parent
         self.update_data(False)
 
