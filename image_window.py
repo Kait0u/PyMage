@@ -160,6 +160,10 @@ class ImageWindow(QMainWindow):
         sub_action.triggered.connect(self.subtract_image)
         self.arithmetic_menu.addAction(sub_action)
 
+        blend_action = QAction("Blend", self)
+        blend_action.triggered.connect(self.blend_image)
+        self.arithmetic_menu.addAction(blend_action)
+
         self.arithmetic_menu.addSeparator()
 
         and_action = QAction("AND", self)
@@ -523,6 +527,19 @@ class ImageWindow(QMainWindow):
             if result is None: return
             im, name = result
             new_image = Image.bitwise_not_image(im, name)
+            new_window = ImageWindow(new_image)
+            new_window.show()
+        except Exception as error:
+            ErrorBox(error)
+
+    def blend_image(self):
+        from forms.blend_form import BlendForm
+
+        try:
+            result = BlendForm.show_dialog(self)
+            if result is None: return
+            im1, im2, alpha, beta, gamma, name = result
+            new_image = Image.blend_images(im1, alpha, im2, beta, gamma, name)
             new_window = ImageWindow(new_image)
             new_window.show()
         except Exception as error:

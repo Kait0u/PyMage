@@ -363,10 +363,10 @@ class Image:
         return result_image
 
     @staticmethod
-    def blend_images(img1: "Image", alpha: float, img2: "Image", beta: float, name: str | None) -> "Image":
+    def blend_images(img1: "Image", alpha: float, img2: "Image", beta: float, gamma: int, name: str | None) -> "Image":
         im1 = img1.img
         im2 = img2.img
-        result = cv.addWeighted(im1, alpha, im2, beta)
+        result = cv.addWeighted(im1, alpha, im2, beta, gamma)
         result_name = name if name is not None else "Untitled"
         result_image = Image.from_numpy(result, result_name)
         return result_image
