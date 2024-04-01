@@ -128,7 +128,8 @@ class ImageArithmeticsForm(QDialog):
         c1 = self.image1 is not None
         c2 = self.image2 is not None
         c3 = self.same_color()
-        return c1 and c2 and c3
+        c4 = self.same_size()
+        return c1 and c2 and c3 and c4
 
     def same_color(self):
         if self.image1.is_gray == self.image2.is_gray:
