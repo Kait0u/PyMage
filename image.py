@@ -344,6 +344,74 @@ class Image:
         cv.imshow(self.name, self.img)
         cv.waitKey(0)
 
+    @staticmethod
+    def add_images(img1: "Image", img2: "Image", name: str | None) -> "Image":
+        im1 = img1.img
+        im2 = img2.img
+        result = cv.add(im1, im2)
+        result_name = name if name is not None else "Untitled"
+        result_image = Image.from_numpy(result, result_name)
+        return result_image
+
+    @staticmethod
+    def subtract_images(img1: "Image", img2: "Image", name: str | None) -> "Image":
+        im1 = img1.img
+        im2 = img2.img
+        result = cv.subtract(im1, im2)
+        result_name = name if name is not None else "Untitled"
+        result_image = Image.from_numpy(result, result_name)
+        return result_image
+
+    @staticmethod
+    def blend_images(img1: "Image", alpha: float, img2: "Image", beta: float, name: str | None) -> "Image":
+        im1 = img1.img
+        im2 = img2.img
+        result = cv.addWeighted(im1, alpha, im2, beta)
+        result_name = name if name is not None else "Untitled"
+        result_image = Image.from_numpy(result, result_name)
+        return result_image
+
+    @staticmethod
+    def bitwise_and_images(img1: "Image", img2: "Image", name: str | None) -> "Image":
+        im1 = img1.img
+        im2 = img2.img
+        result = cv.bitwise_and(im1, im2)
+        result_name = name if name is not None else "Untitled"
+        result_image = Image.from_numpy(result, result_name)
+        return result_image
+
+    @staticmethod
+    def bitwise_or_images(img1: "Image", img2: "Image", name: str | None) -> "Image":
+        im1 = img1.img
+        im2 = img2.img
+        result = cv.bitwise_or(im1, im2)
+        result_name = name if name is not None else "Untitled"
+        result_image = Image.from_numpy(result, result_name)
+        return result_image
+
+    @staticmethod
+    def bitwise_xor_images(img1: "Image", img2: "Image", name: str | None) -> "Image":
+        im1 = img1.img
+        im2 = img2.img
+        result = cv.bitwise_xor(im1, im2)
+        result_name = name if name is not None else "Untitled"
+        result_image = Image.from_numpy(result, result_name)
+        return result_image
+
+    @staticmethod
+    def bitwise_not_image(img1: "Image", name: str | None) -> "Image":
+        im1 = img1.img
+        result = cv.bitwise_not(im1)
+        result_name = name if name is not None else "Untitled"
+        result_image = Image.from_numpy(result, result_name)
+        return result_image
+
+    def bitwise_not(self):
+        result = cv.bitwise_not(self.img)
+        result_name = f"not_{self.name}"
+        result_image = Image.from_numpy(result, result_name)
+        return result_image
+
 
 class Histogram:
     def __init__(self, image: Image, full_range: bool = True) -> None:

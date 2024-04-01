@@ -148,6 +148,33 @@ class ImageWindow(QMainWindow):
         two_stage_filter_action.triggered.connect(self.two_stage_filter)
         self.neighb_menu.addAction(two_stage_filter_action)
 
+        # Arithmetic
+
+        self.arithmetic_menu = self.menu_bar.addMenu("&Arithmetic")
+
+        add_action = QAction("Add", self)
+        add_action.triggered.connect(self.add_image)
+        self.arithmetic_menu.addAction(add_action)
+
+        sub_action = QAction("Subtract", self)
+        sub_action.triggered.connect(self.subtract_image)
+        self.arithmetic_menu.addAction(sub_action)
+
+        self.arithmetic_menu.addSeparator()
+
+        and_action = QAction("AND", self)
+        and_action.triggered.connect(self.bitwise_and_image)
+        self.arithmetic_menu.addAction(and_action)
+
+        or_action = QAction("OR", self)
+        or_action.triggered.connect(self.bitwise_or_image)
+        self.arithmetic_menu.addAction(or_action)
+
+        xor_action = QAction("XOR", self)
+        xor_action.triggered.connect(self.bitwise_xor_image)
+        self.arithmetic_menu.addAction(xor_action)
+
+
         # Actual UI
 
         self.widget = QWidget()
@@ -184,6 +211,9 @@ class ImageWindow(QMainWindow):
             self.histogram_window.close()
         event.accept()
         WINDOW_MANAGER.remove_window(self)
+
+    def __str__(self):
+        return f"{self.image.name} [{self.id}]"
 
     def check_gray(self):
         if not self.image.is_gray:
@@ -413,5 +443,70 @@ class ImageWindow(QMainWindow):
             size, padding = result
             self.image.median(size, padding)
             self.refresh_image()
+        except Exception as error:
+            ErrorBox(error)
+
+    def add_image(self):
+        from forms.image_arithmetics_form import ImageArithmeticsForm
+
+        try:
+            result = ImageArithmeticsForm.show_dialog("+", self)
+            if result is None: return
+            im1, im2, name = result
+            new_image = Image.add_images(im1, im2, name)
+            new_window = ImageWindow(new_image)
+            new_window.show()
+        except Exception as error:
+            ErrorBox(error)
+
+    def subtract_image(self):
+        from forms.image_arithmetics_form import ImageArithmeticsForm
+
+        try:
+            result = ImageArithmeticsForm.show_dialog("-", self)
+            if result is None: return
+            im1, im2, name = result
+            new_image = Image.subtract_images(im1, im2, name)
+            new_window = ImageWindow(new_image)
+            new_window.show()
+        except Exception as error:
+            ErrorBox(error)
+
+    def bitwise_and_image(self):
+        from forms.image_arithmetics_form import ImageArithmeticsForm
+
+        try:
+            result = ImageArithmeticsForm.show_dialog("AND", self)
+            if result is None: return
+            im1, im2, name = result
+            new_image = Image.bitwise_and_images(im1, im2, name)
+            new_window = ImageWindow(new_image)
+            new_window.show()
+        except Exception as error:
+            ErrorBox(error)
+
+    def bitwise_or_image(self):
+        from forms.image_arithmetics_form import ImageArithmeticsForm
+
+        try:
+            result = ImageArithmeticsForm.show_dialog("OR", self)
+            if result is None: return
+            im1, im2, name = result
+            new_image = Image.bitwise_or_images(im1, im2, name)
+            new_window = ImageWindow(new_image)
+            new_window.show()
+        except Exception as error:
+            ErrorBox(error)
+
+    def bitwise_xor_image(self):
+        from forms.image_arithmetics_form import ImageArithmeticsForm
+
+        try:
+            result = ImageArithmeticsForm.show_dialog("XOR", self)
+            if result is None: return
+            im1, im2, name = result
+            new_image = Image.bitwise_xor_images(im1, im2, name)
+            new_window = ImageWindow(new_image)
+            new_window.show()
         except Exception as error:
             ErrorBox(error)
