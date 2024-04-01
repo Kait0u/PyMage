@@ -1,9 +1,9 @@
-# import cv2 as cv
 import numpy as np
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget, QStatusBar
 
+from error_box import ErrorBox
 from forms.blur_form import BlurForm
 from forms.canny_form import CannyForm
 from forms.convolve_form import ConvolveForm
@@ -259,30 +259,31 @@ class ImageWindow(QMainWindow):
             WINDOW_MANAGER.add_window(self.histogram_window)
             self.histogram_window.show()
         except Exception as error:
-            print(error)
+            ErrorBox(error)
         # else:
         #     raise NotImplementedError("No histogram window for this image!")
 
     def equalize_histogram(self):
         try:
+            self.check_gray()
             self.image.equalize_histogram()
             self.refresh_image()
-        except NotImplementedError as error:
-            print(error)
+        except Exception as error:
+            ErrorBox(error)
 
     def stretch_histogram(self):
         try:
             self.image.stretch_histogram(LMIN, LMAX)
             self.refresh_image()
-        except NotImplementedError as error:
-            print(error)
+        except Exception as error:
+            ErrorBox(error)
 
     def negate(self):
         try:
             self.image.negate()
             self.refresh_image()
         except Exception as error:
-            print(error)
+            ErrorBox(error)
 
     def stretch_range(self):
         try:
@@ -292,7 +293,7 @@ class ImageWindow(QMainWindow):
             self.image.stretch_range(p1, p2, q3, q4)
             self.refresh_image()
         except Exception as error:
-            print(error)
+            ErrorBox(error)
 
     def posterize(self):
         try:
@@ -302,7 +303,7 @@ class ImageWindow(QMainWindow):
             self.image.posterize(lvls)
             self.refresh_image()
         except Exception as error:
-            print(error)
+            ErrorBox(error)
 
     def blur(self):
         try:
@@ -312,7 +313,7 @@ class ImageWindow(QMainWindow):
             self.image.blur(size)
             self.refresh_image()
         except Exception as error:
-            print(error)
+            ErrorBox(error)
 
     def gblur(self):
         try:
@@ -322,7 +323,7 @@ class ImageWindow(QMainWindow):
             self.image.gaussian_blur(kernel_size, sigma_x, sigma_y, padding)
             self.refresh_image()
         except Exception as error:
-            print(error)
+            ErrorBox(error)
 
     def sobel(self):
         try:
@@ -333,7 +334,7 @@ class ImageWindow(QMainWindow):
             self.image.sobel(kernel_size, ddepth, padding)
             self.refresh_image()
         except Exception as error:
-            print(error)
+            ErrorBox(error)
 
     def prewitt(self):
         try:
@@ -344,7 +345,7 @@ class ImageWindow(QMainWindow):
             self.image.convolve(kernel, ddepth, padding)
             self.refresh_image()
         except Exception as error:
-            print(error)
+            ErrorBox(error)
 
     def laplacian(self):
         try:
@@ -355,7 +356,7 @@ class ImageWindow(QMainWindow):
             self.image.laplacian(kernel_size, ddepth, padding)
             self.refresh_image()
         except Exception as error:
-            print(error)
+            ErrorBox(error)
 
     def canny(self):
         try:
@@ -366,7 +367,7 @@ class ImageWindow(QMainWindow):
             self.image.canny(th1, th2)
             self.refresh_image()
         except Exception as error:
-            print(error)
+            ErrorBox(error)
 
     def laplasharpen(self):
         try:
@@ -377,7 +378,7 @@ class ImageWindow(QMainWindow):
             self.image.convolve(kernel, ddepth, padding)
             self.refresh_image()
         except Exception as error:
-            print(error)
+            ErrorBox(error)
 
     def convolve(self):
         try:
@@ -388,7 +389,7 @@ class ImageWindow(QMainWindow):
             self.image.convolve(kernel, ddepth, padding, should_normalize)
             self.refresh_image()
         except Exception as error:
-            print(error)
+            ErrorBox(error)
 
     def two_stage_filter(self):
         try:
@@ -399,7 +400,7 @@ class ImageWindow(QMainWindow):
             self.image.convolve(kernel, ddepth, padding, should_normalize)
             self.refresh_image()
         except Exception as error:
-            print(error)
+            ErrorBox(error)
 
     def median(self):
         try:
@@ -410,4 +411,4 @@ class ImageWindow(QMainWindow):
             self.image.median(size, padding)
             self.refresh_image()
         except Exception as error:
-            print(error)
+            ErrorBox(error)
