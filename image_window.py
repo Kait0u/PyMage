@@ -384,8 +384,8 @@ class ImageWindow(QMainWindow):
             self.check_gray()
             result = ConvolveForm.show_dialog(self)
             if result is None: return
-            kernel, ddepth, padding = result
-            self.image.convolve(kernel, ddepth, padding)
+            kernel, ddepth, padding, should_normalize = result
+            self.image.convolve(kernel, ddepth, padding, should_normalize)
             self.refresh_image()
         except Exception as error:
             print(error)
@@ -395,8 +395,8 @@ class ImageWindow(QMainWindow):
             self.check_gray()
             result = TwoStageFilterForm.show_dialog(self)
             if result is None: return
-            kernel, ddepth, padding = result
-            self.image.convolve(kernel, ddepth, padding)
+            kernel, ddepth, padding, should_normalize = result
+            self.image.convolve(kernel, ddepth, padding, should_normalize)
             self.refresh_image()
         except Exception as error:
             print(error)

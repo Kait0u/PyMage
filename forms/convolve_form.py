@@ -18,6 +18,7 @@ class ConvolveForm(QDialog):
         self.ddepth_options = [DesiredDepth.U8, DesiredDepth.F64]
         self.padding = Padding.REPLICATE
         self.padding_options = [Padding.REPLICATE, Padding.ISOLATED, Padding.REFLECT]
+        self.should_normalize = True
 
         title = "Convolve"
         if parent is not None:
@@ -47,6 +48,12 @@ class ConvolveForm(QDialog):
         form_layout2 = QFormLayout()
         form_widget2.setLayout(form_layout2)
         main_layout.addWidget(form_widget2)
+
+        self.normalize_checkbox = QCheckBox()
+        self.normalize_checkbox.setCheckState(self.should_normalize)
+        self.normalize_checkbox.setTristate(False)
+        self.normalize_checkbox.stateChanged.connect(self.normalize_checkbox_state_changed)
+        form_layout2.addRow("Normalize", self.normalize_checkbox)
 
         self.ddepth_combo_box = QComboBox()
         self.ddepth_combo_box.addItems(list(map(
@@ -86,6 +93,10 @@ class ConvolveForm(QDialog):
     def ddepth_idx_changed(self, idx):
         self.ddepth = self.ddepth_options[idx]
 
+    def normalize_checkbox_state_changed(self, value):
+        bv = bool(value)
+        self.should_normalize = bv
+
     def update_filter(self):
         self.filter = self.filter_table.extract_numpy()
 
@@ -104,5 +115,5 @@ class ConvolveForm(QDialog):
         cf = ConvolveForm(parent)
         cf.setModal(True)
         result = cf.exec()
-        return (cf.filter, cf.ddepth, cf.padding) \
+        return (cf.filter, cf.ddepth, cf.padding, cf.should_normalize) \
             if result == QDialog.Accepted else None

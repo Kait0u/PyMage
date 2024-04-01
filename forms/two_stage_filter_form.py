@@ -22,6 +22,8 @@ class TwoStageFilterForm(QDialog):
         self.padding = Padding.REPLICATE
         self.padding_options = [Padding.REPLICATE, Padding.ISOLATED, Padding.REFLECT]
 
+        self.should_normalize = True
+
         title = "Two Stage Filter"
         if parent is not None:
             title = f"{parent.image.name if parent.image is not None else parent.windowTitle()} | Two Stage Filter"
@@ -46,7 +48,7 @@ class TwoStageFilterForm(QDialog):
         filters_layout.addWidget(filter1_widget)
 
         f1_label = QLabel()
-        f1_label.setText("Smoothen")
+        f1_label.setText("F1 (Smoothen)")
         f1_label.setAlignment(Qt.AlignCenter)
         filter1_layout.addWidget(f1_label)
 
@@ -61,7 +63,7 @@ class TwoStageFilterForm(QDialog):
         filters_layout.addWidget(filter2_widget)
 
         f2_label = QLabel()
-        f2_label.setText("Sharpen")
+        f2_label.setText("F2 (Sharpen)")
         f2_label.setAlignment(Qt.AlignCenter)
         filter2_layout.addWidget(f2_label)
 
@@ -96,6 +98,12 @@ class TwoStageFilterForm(QDialog):
         form_widget.setLayout(form_layout)
         main_layout.addWidget(form_widget)
 
+        self.normalize_checkbox = QCheckBox()
+        self.normalize_checkbox.setCheckState(self.should_normalize)
+        self.normalize_checkbox.setTristate(False)
+        self.normalize_checkbox.stateChanged.connect(self.normalize_checkbox_state_changed)
+        form_layout.addRow("Normalize", self.normalize_checkbox)
+
         self.ddepth_combo_box = QComboBox()
         self.ddepth_combo_box.addItems(list(map(
             lambda item: item.name,
@@ -129,6 +137,10 @@ class TwoStageFilterForm(QDialog):
         self.filter1 = self.filter1_table.extract_numpy()
         self.filter2 = self.filter2_table.extract_numpy()
         self.output = convolve_filters(self.filter1, self.filter2)
+
+    def normalize_checkbox_state_changed(self, value):
+        bv = bool(value)
+        self.should_normalize = bv
 
     def update_outfilter(self):
         self.update_filters()

@@ -95,8 +95,9 @@ class GBlurForm(QDialog):
         self.padding = self.padding_options[idx]
 
     def sigma_y_copy_checkbox_toggled(self, val):
-        self.sigma_y_mimics_x = val
-        self.sigma_y_spin_box.setEnabled(not val)
+        bv = bool(val)
+        self.sigma_y_mimics_x = bv
+        self.sigma_y_spin_box.setEnabled(not bv)
 
     def accept(self):
         if self.is_data_valid: super().accept()
