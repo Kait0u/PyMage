@@ -157,11 +157,11 @@ class TwoStageFilterForm(QDialog):
         else: print("Invalid data")
 
     @staticmethod
-    def show_dialog(parent=None) -> tuple[np.ndarray, DesiredDepth, Padding] | None:
+    def show_dialog(parent=None) -> tuple[np.ndarray, DesiredDepth, Padding, bool] | None:
         tsff = TwoStageFilterForm(parent)
         tsff.setModal(True)
         result = tsff.exec()
-        return (tsff.output, tsff.ddepth, tsff.padding) \
+        return (tsff.output, tsff.ddepth, tsff.padding, tsff.should_normalize) \
             if result == QDialog.Accepted else None
 
 
