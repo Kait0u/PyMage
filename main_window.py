@@ -10,7 +10,6 @@ from window_manager import WINDOW_MANAGER
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.subwindows = []
 
         self.setWindowTitle("PyMage")
         self.setWindowIcon(QIcon("assets/icon.png"))
