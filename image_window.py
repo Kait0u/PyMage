@@ -258,8 +258,10 @@ class ImageWindow(QMainWindow):
         new_img.convert_color(ColorModes.LAB)
         imgs = new_img.split_lab()
         for img in imgs:
-            try: img.stretch_histogram(LMIN, LMAX)
-            except: pass
+            try:
+                img.stretch_histogram(LMIN, LMAX)
+            except Exception as error:
+                ErrorBox(error)
             img_win = ImageWindow(img)
             WINDOW_MANAGER.add_window(img_win)
             img_win.show()
@@ -269,8 +271,10 @@ class ImageWindow(QMainWindow):
         new_img.convert_color(ColorModes.HSV)
         imgs = new_img.split_hsv()
         for img in imgs:
-            try: img.stretch_histogram(LMIN, LMAX)
-            except: pass
+            try:
+                img.stretch_histogram(LMIN, LMAX)
+            except Exception as error:
+                ErrorBox(error)
             img_win = ImageWindow(img)
             WINDOW_MANAGER.add_window(img_win)
             img_win.show()
@@ -286,12 +290,9 @@ class ImageWindow(QMainWindow):
         try:
             self.check_gray()
             self.histogram_window = HistogramWindow(self)
-            # WINDOW_MANAGER.add_window(self.histogram_window)
             self.histogram_window.show()
         except Exception as error:
             ErrorBox(error)
-        # else:
-        #     raise NotImplementedError("No histogram window for this image!")
 
     def equalize_histogram(self):
         try:
@@ -303,6 +304,7 @@ class ImageWindow(QMainWindow):
 
     def stretch_histogram(self):
         try:
+            self.check_gray()
             self.image.stretch_histogram(LMIN, LMAX)
             self.refresh_image()
         except Exception as error:
@@ -319,8 +321,10 @@ class ImageWindow(QMainWindow):
         from forms.range_stretch_form import RangeStretchForm
 
         try:
+            self.check_gray()
             result = RangeStretchForm.show_dialog(self)
-            if result is None: return
+            if result is None:
+                return
             p1, p2, q3, q4 = result
             self.image.stretch_range(p1, p2, q3, q4)
             self.refresh_image()
@@ -331,8 +335,10 @@ class ImageWindow(QMainWindow):
         from forms.posterize_form import PosterizeForm
 
         try:
+            self.check_gray()
             result = PosterizeForm.show_dialog(self)
-            if result is None: return
+            if result is None:
+                return
             lvls = result
             self.image.posterize(lvls)
             self.refresh_image()
@@ -344,7 +350,8 @@ class ImageWindow(QMainWindow):
 
         try:
             result = BlurForm.show_dialog(self)
-            if result is None: return
+            if result is None:
+                return
             size = result
             self.image.blur(size)
             self.refresh_image()
@@ -356,7 +363,8 @@ class ImageWindow(QMainWindow):
 
         try:
             result = GBlurForm.show_dialog(self)
-            if result is None: return
+            if result is None:
+                return
             kernel_size, sigma_x, sigma_y, padding = result
             self.image.gaussian_blur(kernel_size, sigma_x, sigma_y, padding)
             self.refresh_image()
@@ -369,7 +377,8 @@ class ImageWindow(QMainWindow):
         try:
             self.check_gray()
             result = SobelForm.show_dialog(self)
-            if result is None: return
+            if result is None:
+                return
             kernel_size, ddepth, padding = result
             self.image.sobel(kernel_size, ddepth, padding)
             self.refresh_image()
@@ -382,7 +391,8 @@ class ImageWindow(QMainWindow):
         try:
             self.check_gray()
             result = PrewittForm.show_dialog(self)
-            if result is None: return
+            if result is None:
+                return
             kernel, ddepth, padding = result
             self.image.convolve(kernel, ddepth, padding)
             self.refresh_image()
@@ -395,7 +405,8 @@ class ImageWindow(QMainWindow):
         try:
             self.check_gray()
             result = LaplacianForm.show_dialog(self)
-            if result is None: return
+            if result is None:
+                return
             kernel_size, ddepth, padding = result
             self.image.laplacian(kernel_size, ddepth, padding)
             self.refresh_image()
@@ -408,7 +419,8 @@ class ImageWindow(QMainWindow):
         try:
             self.check_gray()
             result = CannyForm.show_dialog(self)
-            if result is None: return
+            if result is None:
+                return
             th1, th2 = result
             self.image.canny(th1, th2)
             self.refresh_image()
@@ -421,7 +433,8 @@ class ImageWindow(QMainWindow):
         try:
             self.check_gray()
             result = LaplaSharpenForm.show_dialog(self)
-            if result is None: return
+            if result is None:
+                return
             kernel, ddepth, padding = result
             self.image.convolve(kernel, ddepth, padding)
             self.refresh_image()
@@ -434,7 +447,8 @@ class ImageWindow(QMainWindow):
         try:
             self.check_gray()
             result = ConvolveForm.show_dialog(self)
-            if result is None: return
+            if result is None:
+                return
             kernel, ddepth, padding, should_normalize = result
             self.image.convolve(kernel, ddepth, padding, should_normalize)
             self.refresh_image()
@@ -447,7 +461,8 @@ class ImageWindow(QMainWindow):
         try:
             self.check_gray()
             result = TwoStageFilterForm.show_dialog(self)
-            if result is None: return
+            if result is None:
+                return
             kernel, ddepth, padding, should_normalize = result
             self.image.convolve(kernel, ddepth, padding, should_normalize)
             self.refresh_image()
@@ -458,7 +473,6 @@ class ImageWindow(QMainWindow):
         from forms.median_form import MedianForm
 
         try:
-            # self.check_gray()
             result = MedianForm.show_dialog(self)
             if result is None: return
             size, padding = result
