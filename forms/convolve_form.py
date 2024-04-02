@@ -111,7 +111,7 @@ class ConvolveForm(QDialog):
         else: print("Invalid data")
 
     @staticmethod
-    def show_dialog(parent=None) -> tuple[np.ndarray, DesiredDepth, Padding] | None:
+    def show_dialog(parent=None) -> tuple[np.ndarray, DesiredDepth, Padding, bool] | None:
         cf = ConvolveForm(parent)
         cf.setModal(True)
         result = cf.exec()
