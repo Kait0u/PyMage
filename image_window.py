@@ -4,20 +4,9 @@ from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget, QStatusBar
 
 from error_box import ErrorBox
-from forms.blur_form import BlurForm
-from forms.canny_form import CannyForm
-from forms.convolve_form import ConvolveForm
-from forms.gblur_form import GBlurForm
-from forms.laplasharpen_form import LaplaSharpenForm
-from forms.median_form import MedianForm
-from forms.prewitt_form import PrewittForm
-from forms.two_stage_filter_form import TwoStageFilterForm
+
 from image import Image, ColorModes
 from histogram_window import HistogramWindow
-from forms.laplacian_form import LaplacianForm
-from forms.posterize_form import PosterizeForm
-from forms.range_stretch_form import RangeStretchForm
-from forms.sobel_form import SobelForm
 from window_manager import WINDOW_MANAGER
 
 LMIN = 0
@@ -327,6 +316,8 @@ class ImageWindow(QMainWindow):
             ErrorBox(error)
 
     def stretch_range(self):
+        from forms.range_stretch_form import RangeStretchForm
+
         try:
             result = RangeStretchForm.show_dialog(self)
             if result is None: return
@@ -337,6 +328,8 @@ class ImageWindow(QMainWindow):
             ErrorBox(error)
 
     def posterize(self):
+        from forms.posterize_form import PosterizeForm
+
         try:
             result = PosterizeForm.show_dialog(self)
             if result is None: return
@@ -347,6 +340,8 @@ class ImageWindow(QMainWindow):
             ErrorBox(error)
 
     def blur(self):
+        from forms.blur_form import BlurForm
+
         try:
             result = BlurForm.show_dialog(self)
             if result is None: return
@@ -357,6 +352,8 @@ class ImageWindow(QMainWindow):
             ErrorBox(error)
 
     def gblur(self):
+        from forms.gblur_form import GBlurForm
+
         try:
             result = GBlurForm.show_dialog(self)
             if result is None: return
@@ -367,6 +364,8 @@ class ImageWindow(QMainWindow):
             ErrorBox(error)
 
     def sobel(self):
+        from forms.sobel_form import SobelForm
+
         try:
             self.check_gray()
             result = SobelForm.show_dialog(self)
@@ -378,6 +377,8 @@ class ImageWindow(QMainWindow):
             ErrorBox(error)
 
     def prewitt(self):
+        from forms.prewitt_form import PrewittForm
+
         try:
             self.check_gray()
             result = PrewittForm.show_dialog(self)
@@ -389,6 +390,8 @@ class ImageWindow(QMainWindow):
             ErrorBox(error)
 
     def laplacian(self):
+        from forms.laplacian_form import LaplacianForm
+
         try:
             self.check_gray()
             result = LaplacianForm.show_dialog(self)
@@ -400,6 +403,8 @@ class ImageWindow(QMainWindow):
             ErrorBox(error)
 
     def canny(self):
+        from forms.canny_form import CannyForm
+
         try:
             self.check_gray()
             result = CannyForm.show_dialog(self)
@@ -411,6 +416,8 @@ class ImageWindow(QMainWindow):
             ErrorBox(error)
 
     def laplasharpen(self):
+        from forms.laplasharpen_form import LaplaSharpenForm
+
         try:
             self.check_gray()
             result = LaplaSharpenForm.show_dialog(self)
@@ -422,6 +429,8 @@ class ImageWindow(QMainWindow):
             ErrorBox(error)
 
     def convolve(self):
+        from forms.convolve_form import ConvolveForm
+
         try:
             self.check_gray()
             result = ConvolveForm.show_dialog(self)
@@ -433,6 +442,8 @@ class ImageWindow(QMainWindow):
             ErrorBox(error)
 
     def two_stage_filter(self):
+        from forms.two_stage_filter_form import TwoStageFilterForm
+
         try:
             self.check_gray()
             result = TwoStageFilterForm.show_dialog(self)
@@ -444,6 +455,8 @@ class ImageWindow(QMainWindow):
             ErrorBox(error)
 
     def median(self):
+        from forms.median_form import MedianForm
+
         try:
             # self.check_gray()
             result = MedianForm.show_dialog(self)
