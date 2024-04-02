@@ -31,31 +31,38 @@ class ImageWindow(QMainWindow):
         self.image_menu = self.menu_bar.addMenu("&Image")
 
         self.type_menu = self.image_menu.addMenu("&Type")
+
         to_grayscale_action = QAction("To Grayscale (8b)", self)
         to_grayscale_action.triggered.connect(self.to_grayscale)
         self.type_menu.addAction(to_grayscale_action)
+
         to_rgb_action = QAction("To RGB", self)
         to_rgb_action.triggered.connect(self.to_rgb)
         self.type_menu.addAction(to_rgb_action)
+
         self.type_menu.addSeparator()
+
         split_rgb_action = QAction("Split as RGB", self)
         split_rgb_action.triggered.connect(self.split_rgb)
         self.type_menu.addAction(split_rgb_action)
+
         split_lab_action = QAction("Split as LAB", self)
         split_lab_action.triggered.connect(self.split_lab)
         self.type_menu.addAction(split_lab_action)
+
         split_hsv_action = QAction("Split as HSV", self)
         split_hsv_action.triggered.connect(self.split_hsv)
         self.type_menu.addAction(split_hsv_action)
 
-
         self.image_menu.addSeparator()
+
         duplicate_action = QAction("Duplicate", self)
         duplicate_action.triggered.connect(self.duplicate)
         duplicate_action.setShortcut("Ctrl+D")
         self.image_menu.addAction(duplicate_action)
 
         self.image_menu.addSeparator()
+
         self.histogram_menu = self.image_menu.addMenu("&Histogram")
 
         equalize_action = QAction("Equalize", self)
@@ -73,6 +80,7 @@ class ImageWindow(QMainWindow):
         self.histogram_menu.addAction(disp_hist_action)
 
         self.op_menu = self.menu_bar.addMenu("&Operations")
+
         self.unary_menu = self.op_menu.addMenu("&Unary")
 
         negate_action = QAction("Negate", self)

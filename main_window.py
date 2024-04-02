@@ -1,6 +1,5 @@
-import sys
 from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import QMainWindow, QApplication, QToolBar, QMenuBar, QAction, QMessageBox, QDialog, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QMenuBar, QAction, QMessageBox, QFileDialog
 
 import image_arithmetic
 from error_box import ErrorBox
