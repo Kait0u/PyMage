@@ -24,6 +24,7 @@ class ImageWindow(QMainWindow):
         self.id = WINDOW_MANAGER.generate_uid(self)
 
         self.image = image
+        self.current_zoom = 100
 
         self.setWindowTitle(f"{self.image.name} ({self.id}) | PyMage")
         # self.setMinimumSize(MIN_SIZE, MIN_SIZE)
@@ -257,8 +258,7 @@ class ImageWindow(QMainWindow):
             self.color_status_label.setText("RGB")
 
     def refresh_image(self):
-
-        self.update_preview(100)
+        self.update_preview(self.current_zoom)
 
         self.update_color_status()
 
@@ -274,6 +274,7 @@ class ImageWindow(QMainWindow):
 
     def slider_changed(self, value):
         percent = self.scale_slider.value
+        self.current_zoom = percent
         self.update_preview(percent)
 
     def update_preview(self, scale_percent: int):
