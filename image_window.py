@@ -1,19 +1,21 @@
 import numpy as np
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget, QStatusBar, QHBoxLayout, \
-    QStyle
+    QStyle, QScrollArea, QScrollBar, QFrame, QDesktopWidget
 
 from error_box import ErrorBox
 
 from image import Image, ColorModes
 from histogram_window import HistogramWindow
+from widgets.scale_slider import ScaleSlider
 from window_manager import WINDOW_MANAGER
 
 LMIN = 0
 LMAX = 255
-SCALING = [25, 50, 100, 150, 200]
 
+USER_SCREEN_WIDTH = 1920
+USER_SCREEN_HEIGHT = 1080
 
 class ImageWindow(QMainWindow):
     def __init__(self, image: Image):
@@ -24,6 +26,7 @@ class ImageWindow(QMainWindow):
         self.image = image
 
         self.setWindowTitle(f"{self.image.name} ({self.id}) | PyMage")
+        # self.setMinimumSize(MIN_SIZE, MIN_SIZE)
         # self.resize(self.image.width, self.image.height)
 
         self.menu_bar = QMenuBar(self)
@@ -32,14 +35,15 @@ class ImageWindow(QMainWindow):
         self.widget = QWidget()
         self.setCentralWidget(self.widget)
 
-        self.layout = QVBoxLayout()
-        self.widget.setLayout(self.layout)
+        self.layout = QVBoxLayout(self.widget)
+        self.layout.setContentsMargins(0, 0, 0, 0)
 
         self.image_frame = QLabel()
         self.layout.addWidget(self.image_frame)
 
         self.status_bar = QStatusBar()
         self.setStatusBar(self.status_bar)
+
 
         # [Menu bar]
         self.image_menu = self.menu_bar.addMenu("&Image")
@@ -194,11 +198,26 @@ class ImageWindow(QMainWindow):
         self.arithmetic_menu.addAction(not_action)
 
         # [Status bar]
+        self.status_bar.setSizeGripEnabled(False)
+
         self.color_status_label = QLabel()
+        self.color_status_label.setContentsMargins(10, 0, 10, 0)
         self.status_bar.addWidget(self.color_status_label)
+
+        self.scale_slider = ScaleSlider()
+        self.scale_slider.valueChanged.connect(self.slider_changed)
+        self.status_bar.addPermanentWidget(self.scale_slider)
 
         # [Post-render activities]
 
+        self.status_bar.setStyleSheet("""
+        QStatusBar {
+            border-left: 1px inset #AAAAAA;
+            border-top: 1px inset #AAAAAA;
+            background: #ffffff;
+        }
+        """
+                                      )
         self.histogram_window = None
         self.refresh_image()
 
@@ -238,14 +257,8 @@ class ImageWindow(QMainWindow):
             self.color_status_label.setText("RGB")
 
     def refresh_image(self):
-        color_format = QImage.Format_RGB888 if self.image.color_mode != ColorModes.GRAY else QImage.Format_Grayscale8
 
-        self.qt_image = QImage(self.image.img, self.image.width,
-                               self.image.height, self.image.img.strides[0], color_format)
-
-        self.qt_image = QPixmap.fromImage(self.qt_image)
-        self.image_frame.setPixmap(self.qt_image)
-        self.image_frame.setAlignment(Qt.AlignCenter)
+        self.update_preview(100)
 
         self.update_color_status()
 
@@ -258,6 +271,45 @@ class ImageWindow(QMainWindow):
         elif histwin_exists and not is_grayscale:
             WINDOW_MANAGER.remove_window(self.histogram_window)
             self.histogram_window = None
+
+    def slider_changed(self, value):
+        percent = self.scale_slider.value
+        self.update_preview(percent)
+
+    def update_preview(self, scale_percent: int):
+        try:
+            w = self.image.width
+            h = self.image.height
+
+            new_w = w // 100 * scale_percent
+            new_h = h // 100 * scale_percent
+
+            color_format = QImage.Format_RGB888 if self.image.color_mode != ColorModes.GRAY else QImage.Format_Grayscale8
+            self.qt_image = QImage(self.image.img, self.image.width,
+                                   self.image.height, self.image.img.strides[0], color_format)
+            self.qt_image = QPixmap.fromImage(self.qt_image)
+            self.qt_image = self.qt_image.scaled(new_w, new_h)
+            self.image_frame.setPixmap(self.qt_image)
+            self.image_frame.setAlignment(Qt.AlignCenter)
+
+            size = self.qt_image.size()
+            self.widget.setMinimumSize(size)
+            self.adjust_size()
+
+        except Exception as error:
+            ErrorBox(error)
+
+    def adjust_size(self):
+        was_maximized = self.isMaximized()
+
+        self.showNormal()
+
+        self.image_frame.adjustSize()
+        self.widget.adjustSize()
+        self.adjustSize()
+
+        if was_maximized:
+            self.showMaximized()
 
     def to_grayscale(self):
         self.image.convert_color(ColorModes.GRAY)
@@ -306,7 +358,6 @@ class ImageWindow(QMainWindow):
         new_image = self.image.copy()
         new_image.name += "_duplicate"
         new_window = ImageWindow(new_image)
-        # WINDOW_MANAGER.add_window(new_window)
         new_window.show()
 
     def display_histogram(self):
