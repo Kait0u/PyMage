@@ -204,7 +204,7 @@ class Image:
 
     @property
     def is_binary(self):
-        result = self.is_gray and np.unique(self.img) == np.array([LMIN, LMAX])
+        result = self.is_gray and np.array_equal(np.unique(self.img), np.array([LMIN, LMAX]))
         return result
 
     def negate(self):

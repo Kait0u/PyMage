@@ -1,7 +1,8 @@
 import numpy as np
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget, QStatusBar
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget, QStatusBar, QHBoxLayout, \
+    QStyle
 
 from error_box import ErrorBox
 
@@ -28,6 +29,19 @@ class ImageWindow(QMainWindow):
         self.menu_bar = QMenuBar(self)
         self.setMenuBar(self.menu_bar)
 
+        self.widget = QWidget()
+        self.setCentralWidget(self.widget)
+
+        self.layout = QVBoxLayout()
+        self.widget.setLayout(self.layout)
+
+        self.image_frame = QLabel()
+        self.layout.addWidget(self.image_frame)
+
+        self.status_bar = QStatusBar()
+        self.setStatusBar(self.status_bar)
+
+        # [Menu bar]
         self.image_menu = self.menu_bar.addMenu("&Image")
 
         self.type_menu = self.image_menu.addMenu("&Type")
@@ -179,20 +193,11 @@ class ImageWindow(QMainWindow):
         not_action.triggered.connect(self.bitwise_not_image)
         self.arithmetic_menu.addAction(not_action)
 
+        # [Status bar]
+        self.color_status_label = QLabel()
+        self.status_bar.addWidget(self.color_status_label)
 
-        # Actual UI
-
-        self.widget = QWidget()
-        self.setCentralWidget(self.widget)
-
-        self.layout = QVBoxLayout()
-        self.widget.setLayout(self.layout)
-
-        self.image_frame = QLabel()
-        self.layout.addWidget(self.image_frame)
-
-        self.status_bar = QStatusBar()
-        self.setStatusBar(self.status_bar)
+        # [Post-render activities]
 
         self.histogram_window = None
         self.refresh_image()
@@ -224,6 +229,14 @@ class ImageWindow(QMainWindow):
         if not self.image.is_gray:
             raise Exception("Image is not a grayscale image")
 
+    def update_color_status(self):
+        if self.image.is_binary:
+            self.color_status_label.setText("GRAY (BIN)")
+        elif self.image.is_gray:
+            self.color_status_label.setText("GRAY")
+        else:
+            self.color_status_label.setText("RGB")
+
     def refresh_image(self):
         color_format = QImage.Format_RGB888 if self.image.color_mode != ColorModes.GRAY else QImage.Format_Grayscale8
 
@@ -233,6 +246,8 @@ class ImageWindow(QMainWindow):
         self.qt_image = QPixmap.fromImage(self.qt_image)
         self.image_frame.setPixmap(self.qt_image)
         self.image_frame.setAlignment(Qt.AlignCenter)
+
+        self.update_color_status()
 
         histwin_exists = self.histogram_window is not None
         is_grayscale = self.image.is_gray
