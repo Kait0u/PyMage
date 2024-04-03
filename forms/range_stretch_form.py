@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QHBoxLayout, QSpinBox,
                              QDialog, QDialogButtonBox)
 
-from mplcanvas import MplCanvas
+from widgets.mplcanvas import MplCanvas
 
 LMIN = 0
 LMAX = 255

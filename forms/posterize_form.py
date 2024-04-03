@@ -1,10 +1,9 @@
 import numpy as np
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QHBoxLayout, QSpinBox,
+from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QSpinBox,
                              QDialog, QDialogButtonBox)
 
-from image import Histogram
-from mplcanvas import MplCanvas
+from widgets.mplcanvas import MplCanvas
 
 LMIN = 0
 LMAX = 255

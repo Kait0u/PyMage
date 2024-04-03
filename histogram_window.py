@@ -1,9 +1,8 @@
 import numpy as np
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QSpacerItem, QTableWidget, QGroupBox, QScrollArea, \
-    QTableView, QAbstractItemView, QTableWidgetItem, QHeaderView
+from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QTableWidget, QGroupBox, QTableView, QAbstractItemView, QTableWidgetItem, QHeaderView
 
-from mplcanvas import MplCanvas
+from widgets.mplcanvas import MplCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from window_manager import WINDOW_MANAGER
 
