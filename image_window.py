@@ -282,10 +282,14 @@ class ImageWindow(QMainWindow):
             w = self.image.width
             h = self.image.height
 
-            new_w = w // 100 * scale_percent
-            new_h = h // 100 * scale_percent
+            if scale_percent != 100:
+                new_w = w // 100 * scale_percent
+                new_h = h // 100 * scale_percent
+            else:
+                new_w = w
+                new_h = h
 
-            color_format = QImage.Format_RGB888 if self.image.color_mode != ColorModes.GRAY else QImage.Format_Grayscale8
+            color_format = QImage.Format_RGB888 if not self.image.is_gray else QImage.Format_Grayscale8
             self.qt_image = QImage(self.image.img, self.image.width,
                                    self.image.height, self.image.img.strides[0], color_format)
             self.qt_image = QPixmap.fromImage(self.qt_image)
