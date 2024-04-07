@@ -1,8 +1,7 @@
 import numpy as np
-from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QSpinBox,
-                             QDialog, QDialogButtonBox, QDoubleSpinBox, QComboBox, QCheckBox, QPushButton, QTableView,
-                             QAbstractItemView, QTableWidget, QHeaderView)
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QDialog, QDialogButtonBox, QComboBox,
+                             QCheckBox)
 
 from forms.form_widgets.np_tablewidget import NpTableWidget
 from image import DesiredDepth, Padding

@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMessageBox, QApplication
+from PyQt5.QtWidgets import QMessageBox
 
 
 class ErrorBox(QMessageBox):

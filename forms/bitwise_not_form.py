@@ -1,7 +1,6 @@
-from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QSpinBox,
-                             QDialog, QDialogButtonBox, QDoubleSpinBox, QComboBox, QCheckBox, QPushButton, QTableView,
-                             QAbstractItemView, QTableWidget, QHeaderView, QHBoxLayout, QLabel, QFrame, QLineEdit)
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QDialog, QDialogButtonBox, QPushButton,
+                             QHBoxLayout, QLabel, QLineEdit)
 
 from error_box import ErrorBox
 from forms.form_widgets.window_preview import WindowPreview

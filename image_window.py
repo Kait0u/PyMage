@@ -1,8 +1,7 @@
 import numpy as np
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget, QStatusBar, QHBoxLayout, \
-    QStyle, QScrollArea, QScrollBar, QFrame, QDesktopWidget
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget, QStatusBar
 
 from error_box import ErrorBox
 
