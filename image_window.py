@@ -197,6 +197,28 @@ class ImageWindow(QMainWindow):
         not_action.triggered.connect(self.bitwise_not_image)
         self.arithmetic_menu.addAction(not_action)
 
+        # Morphology
+
+        self.morphology_menu = self.menu_bar.addMenu("&Morphology")
+
+        erosion_action = QAction("Erosion", self)
+        self.morphology_menu.addAction(erosion_action)
+
+        dilation_action = QAction("Dilation", self)
+        self.morphology_menu.addAction(dilation_action)
+
+        opening_action = QAction("Opening", self)
+        self.morphology_menu.addAction(opening_action)
+
+        closing_action = QAction("Closing", self)
+        self.morphology_menu.addAction(closing_action)
+
+        self.morphology_menu.addSeparator()
+
+        skeletonization_action = QAction("Skeletonization", self)
+        self.morphology_menu.addAction(skeletonization_action)
+
+
         # [Status bar]
         self.status_bar.setSizeGripEnabled(False)
 
