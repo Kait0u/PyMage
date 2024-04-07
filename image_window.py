@@ -304,8 +304,8 @@ class ImageWindow(QMainWindow):
             h = self.image.height
 
             if scale_percent != 100:
-                new_w = w // 100 * scale_percent
-                new_h = h // 100 * scale_percent
+                new_w = int(w / 100 * scale_percent)
+                new_h = int(h / 100 * scale_percent)
             else:
                 new_w = w
                 new_h = h
