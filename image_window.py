@@ -46,8 +46,11 @@ class ImageWindow(QMainWindow):
 
 
         # [Menu bar]
+
+        # Image
         self.image_menu = self.menu_bar.addMenu("&Image")
 
+        # Type
         self.type_menu = self.image_menu.addMenu("&Type")
 
         to_grayscale_action = QAction("To Grayscale (8b)", self)
@@ -81,6 +84,7 @@ class ImageWindow(QMainWindow):
 
         self.image_menu.addSeparator()
 
+        # Histogram submenu
         self.histogram_menu = self.image_menu.addMenu("&Histogram")
 
         equalize_action = QAction("Equalize", self)
@@ -97,8 +101,10 @@ class ImageWindow(QMainWindow):
         disp_hist_action.triggered.connect(self.display_histogram)
         self.histogram_menu.addAction(disp_hist_action)
 
+        # Operations
         self.op_menu = self.menu_bar.addMenu("&Operations")
 
+        # Unary submenu
         self.unary_menu = self.op_menu.addMenu("&Unary")
 
         negate_action = QAction("Negate", self)
@@ -113,6 +119,7 @@ class ImageWindow(QMainWindow):
         posterize_action.triggered.connect(self.posterize)
         self.unary_menu.addAction(posterize_action)
 
+        # Neighborhood submenu
         self.neighb_menu = self.op_menu.addMenu("&Neighborhood")
 
         blur_action = QAction("Blur", self)
