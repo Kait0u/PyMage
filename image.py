@@ -1,3 +1,4 @@
+import cv2
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
@@ -428,13 +429,30 @@ class Image:
 
     @binary_only
     def morph_open(self, kernel: np.array, padding: Padding, anchor: tuple[int, int] = (-1, -1)):
+        self.erode(kernel, padding, anchor=anchor)
+        self.dilate(kernel, padding, anchor=anchor)
+
+    @binary_only
+    def morph_close(self, kernel: np.array, padding: Padding, anchor: tuple[int, int] = (-1, -1)):
         self.dilate(kernel, padding, anchor=anchor)
         self.erode(kernel, padding, anchor=anchor)
 
     @binary_only
-    def morph_close(self, kernel: np.array, padding: Padding, anchor: tuple[int, int] = (-1, -1)):
-        self.erode(kernel, padding, anchor=anchor)
-        self.dilate(kernel, padding, anchor=anchor)
+    def skeletonize(self, kernel: np.array, padding: Padding, anchor: tuple[int, int] = (-1, -1)):
+        skel = np.zeros_like(self.img)
+        img_copy = self.img.copy()
+        kernel = cv.getStructuringElement(cv.MORPH_CROSS, (3, 3))
+
+        while True:
+            img_open = cv.erode(img_copy, kernel, anchor=anchor, borderType=padding.value)
+            img_open = cv.dilate(img_open, kernel, anchor=anchor, borderType=padding.value)
+            img_subtr = cv.subtract(img_copy, img_open)
+            img_er = cv.erode(img_copy, kernel, anchor=anchor, borderType=padding.value)
+            skel = cv.bitwise_or(skel, img_subtr)
+            img_copy = img_er.copy()
+            if cv.countNonZero(img_copy) == 0:
+                self.img = skel
+                break
 
 
 class Histogram:

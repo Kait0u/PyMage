@@ -9,8 +9,14 @@ def test():
     # p = r"C:\Users\jjaw-\Downloads\lena.png"
 
     app = QApplication(sys.argv)
-    rsf = RangeStretchForm()
-    rsf.show()
+    from image import Image
+    img = Image.from_file(p, True)
+    img.posterize(2)
+    img = img.bitwise_not()
+    import numpy as np
+    from image import Padding
+    img.skeletonize(np.ones((3, 3)), Padding.REFLECT)
+    img.show()
     # print(rsf.p1)
     app.exec()
 
