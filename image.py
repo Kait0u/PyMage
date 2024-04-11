@@ -204,8 +204,14 @@ class Image:
 
     @property
     def is_binary(self):
-        result = self.is_gray and np.array_equal(np.unique(self.img), np.array([LMIN, LMAX]))
+        result = self.is_gray and (np.array_equal(np.unique(self.img), np.array([LMIN, LMAX]))
+                                   or np.array_equal(np.unique(self.img), np.array([LMIN]))
+                                   or np.array_equal(np.unique(self.img), np.array([LMAX])))
         return result
+
+    @property
+    def is_black(self):
+        return self.is_gray and np.array_equal(np.unique(self.img), np.array([LMIN]))
 
     def negate(self):
         self.img = LMAX - self.img
@@ -411,6 +417,15 @@ class Image:
         result_name = f"not_{self.name}"
         result_image = Image.from_numpy(result, result_name)
         return result_image
+
+    @binary_only
+    def dilate(self, kernel: np.array, padding: Padding, anchor: tuple[int, int] = (-1, -1)):
+        self.img = cv.dilate(self.img, kernel, anchor=anchor, borderType=padding.value)
+
+    @binary_only
+    def erode(self, kernel: np.array, padding: Padding, anchor: tuple[int, int] = (-1, -1)):
+        self.img = cv.erode(self.img, kernel, anchor=anchor, borderType=padding.value)
+
 
 
 class Histogram:
