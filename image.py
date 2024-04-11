@@ -426,6 +426,15 @@ class Image:
     def erode(self, kernel: np.array, padding: Padding, anchor: tuple[int, int] = (-1, -1)):
         self.img = cv.erode(self.img, kernel, anchor=anchor, borderType=padding.value)
 
+    @binary_only
+    def morph_open(self, kernel: np.array, padding: Padding, anchor: tuple[int, int] = (-1, -1)):
+        self.dilate(kernel, padding, anchor=anchor)
+        self.erode(kernel, padding, anchor=anchor)
+
+    @binary_only
+    def morph_close(self, kernel: np.array, padding: Padding, anchor: tuple[int, int] = (-1, -1)):
+        self.erode(kernel, padding, anchor=anchor)
+        self.dilate(kernel, padding, anchor=anchor)
 
 
 class Histogram:
