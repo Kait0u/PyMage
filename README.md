@@ -15,3 +15,4 @@ Credit project for Image Processing Algorithms class
 - Convolution using filters
 
 ## Class 3 (WIP)
+- Morphology Ops
