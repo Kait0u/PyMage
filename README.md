@@ -16,3 +16,4 @@ Credit project for Image Processing Algorithms class
 
 ## Class 3 (WIP)
 - Morphology Ops
+- Image Pyramid
