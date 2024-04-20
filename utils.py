@@ -75,3 +75,20 @@ def bresenham(x1: int, y1: int, x2: int, y2: int) -> np.ndarray:
             return _bresenham_high(x2, y2, x1, y1)
         else:
             return _bresenham_high(x1, y1, x2, y2)
+
+
+def rhombus_ones(n: int) -> np.ndarray:
+    if n < 3 or n % 2 == 0:
+        raise ValueError("n must be odd and at least 3")
+
+    result = np.zeros((n, n))
+    center = n // 2
+
+    for level in range(0, center + 1):
+        result[level, center - level: center + level + 1] = 1
+        if level != center: result[n - level - 1, center - level: center + level + 1] = 1
+
+    return result
+
+
+

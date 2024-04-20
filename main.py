@@ -7,7 +7,7 @@ TEST = True
 
 def test():
     import numpy as np
-    from utils import bresenham
+    from utils import bresenham, rhombus_ones
     from random import randint
     import matplotlib.pyplot as plt
 
@@ -27,18 +27,12 @@ def test():
     # # print(rsf.p1)
     # app.exec()
 
-    image = np.zeros((64, 64))
-    x1, y1, x2, y2 = randint(0, 63), randint(0, 63), randint(0, 63), randint(0, 63)
-    x1, y1, x2, y2 = 0, 0, 63, 15
-    print(x1, y1)
-    print(x2, y2)
-    line = bresenham(x1, y1, x2, y2)
-    print(line)
-    line = list(line)
-    for p in line:
-        image[p[0], p[1]] = 1
-    plt.imshow(image)
-    plt.show()
+    for n in range(3, 16, 2):
+        r = rhombus_ones(n)
+        print(r)
+        plt.imshow(r)
+        plt.show()
+        print()
 
 
 def main():
