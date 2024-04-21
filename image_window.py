@@ -7,6 +7,7 @@ from error_box import ErrorBox
 
 from image import Image, ColorModes
 from histogram_window import HistogramWindow
+from image_utils import structuring_element
 from widgets.scale_slider import ScaleSlider
 from window_manager import WINDOW_MANAGER
 
@@ -209,20 +210,25 @@ class ImageWindow(QMainWindow):
         self.morphology_menu = self.menu_bar.addMenu("&Morphology")
 
         erosion_action = QAction("Erosion", self)
+        erosion_action.triggered.connect(self.erode)
         self.morphology_menu.addAction(erosion_action)
 
         dilation_action = QAction("Dilation", self)
+        dilation_action.triggered.connect(self.dilate)
         self.morphology_menu.addAction(dilation_action)
 
         opening_action = QAction("Opening", self)
+        opening_action.triggered.connect(self.morph_open)
         self.morphology_menu.addAction(opening_action)
 
         closing_action = QAction("Closing", self)
+        closing_action.triggered.connect(self.morph_close)
         self.morphology_menu.addAction(closing_action)
 
         self.morphology_menu.addSeparator()
 
         skeletonization_action = QAction("Skeletonization", self)
+        skeletonization_action.triggered.connect(self.skeletonize)
         self.morphology_menu.addAction(skeletonization_action)
 
 
@@ -640,5 +646,70 @@ class ImageWindow(QMainWindow):
 
         try:
             blend_image(self)
+        except Exception as error:
+            ErrorBox(error)
+
+    def erode(self):
+        from forms.morphology_form import MorphologyForm
+
+        try:
+            result = MorphologyForm.show_dialog("Erosion", self)
+            if result is None: return
+            shape, size, padding = result
+            kernel = structuring_element(shape, size)
+            self.image.erode(kernel, padding)
+            self.refresh_image()
+        except Exception as error:
+            ErrorBox(error)
+
+    def dilate(self):
+        from forms.morphology_form import MorphologyForm
+
+        try:
+            result = MorphologyForm.show_dialog("Dilation", self)
+            if result is None: return
+            shape, size, padding = result
+            kernel = structuring_element(shape, size)
+            self.image.dilate(kernel, padding)
+            self.refresh_image()
+        except Exception as error:
+            ErrorBox(error)
+
+    def morph_open(self):
+        from forms.morphology_form import MorphologyForm
+
+        try:
+            result = MorphologyForm.show_dialog("Opening", self)
+            if result is None: return
+            shape, size, padding = result
+            kernel = structuring_element(shape, size)
+            self.image.morph_open(kernel, padding)
+            self.refresh_image()
+        except Exception as error:
+            ErrorBox(error)
+
+    def morph_close(self):
+        from forms.morphology_form import MorphologyForm
+
+        try:
+            result = MorphologyForm.show_dialog("Closing", self)
+            if result is None: return
+            shape, size, padding = result
+            kernel = structuring_element(shape, size)
+            self.image.morph_close(kernel, padding)
+            self.refresh_image()
+        except Exception as error:
+            ErrorBox(error)
+
+    def skeletonize(self):
+        from forms.morphology_form import MorphologyForm
+
+        try:
+            result = MorphologyForm.show_dialog("Skeletonization", self)
+            if result is None: return
+            shape, size, padding = result
+            kernel = structuring_element(shape, size)
+            self.image.skeletonize(kernel, padding)
+            self.refresh_image()
         except Exception as error:
             ErrorBox(error)

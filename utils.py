@@ -1,5 +1,6 @@
 from typing import List, Tuple
 
+import cv2
 import numpy as np
 from scipy.signal import convolve2d
 
@@ -81,7 +82,7 @@ def rhombus_ones(n: int) -> np.ndarray:
     if n < 3 or n % 2 == 0:
         raise ValueError("n must be odd and at least 3")
 
-    result = np.zeros((n, n))
+    result = np.zeros((n, n), dtype=np.uint8)
     center = n // 2
 
     for level in range(0, center + 1):
@@ -89,6 +90,3 @@ def rhombus_ones(n: int) -> np.ndarray:
         if level != center: result[n - level - 1, center - level: center + level + 1] = 1
 
     return result
-
-
-
