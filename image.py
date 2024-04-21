@@ -462,22 +462,23 @@ class Image:
 
     @grayscale_only
     def hough(self, rho, theta, threshold) -> "Image":
-        lines = cv.HoughLines(self.img, rho, theta, threshold)
-        n = len(lines)
-        img_copy = self.img.copy()
+        edges = cv.Canny(self.img, 50, 150)
+        lines = cv.HoughLines(edges, rho, theta, threshold)
+        if lines is None:
+            raise ValueError("Nothing has been detected...")
+        img_copy = np.repeat(self.img[..., np.newaxis], 3, axis=2)
         thickness = 2
-        color = (255, 0, 0)
+        color = (0, 0, 255)
         length = (max(self.img.shape) // 1000 + 1) * 1000
-        for i in range(n):
-            rho_local = lines[i][0]
-            theta_local = lines[i][1]
-            a = np.cos(theta_local)
-            b = np.sin(theta_local)
-            x0 = a * rho_local
-            y0 = b * rho_local
-            pt1 = (x0 + length * (-b), y0 + length * a)
-            pt2 = (x0 - length * (-b), y0 - length * a)
-            cv.line(img_copy, pt1, pt2, color, thickness, cv.LINE_AA)
+        for line in lines:
+            for rho_local, theta_local in line:
+                a = np.cos(theta_local)
+                b = np.sin(theta_local)
+                x0 = a * rho_local
+                y0 = b * rho_local
+                pt1 = (int(x0 + length * (-b)), int(y0 + length * a))
+                pt2 = (int(x0 - length * (-b)), int(y0 - length * a))
+                cv.line(img_copy, pt1, pt2, color, thickness, cv.LINE_AA)
 
         result = Image.from_numpy(img_copy, f"hough_{self.name}")
         return result
