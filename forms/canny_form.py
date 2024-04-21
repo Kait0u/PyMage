@@ -2,6 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QSpinBox,
                              QDialog, QDialogButtonBox, QDoubleSpinBox, QComboBox, QCheckBox)
 
+
 class CannyForm(QDialog):
     def __init__(self, parent: QMainWindow | None = None):
         super().__init__()

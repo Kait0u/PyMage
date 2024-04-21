@@ -484,9 +484,6 @@ class Image:
         return result
 
 
-
-
-
 class Histogram:
     def __init__(self, image: Image, full_range: bool = True) -> None:
         if image.color_mode != ColorModes.GRAY:

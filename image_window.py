@@ -231,6 +231,13 @@ class ImageWindow(QMainWindow):
         skeletonization_action.triggered.connect(self.skeletonize)
         self.morphology_menu.addAction(skeletonization_action)
 
+        # Analysis
+        self.analysis_menu = self.menu_bar.addMenu("&Analysis")
+
+        hough_action = QAction("Hough", self)
+        hough_action.triggered.connect(self.hough)
+        self.analysis_menu.addAction(hough_action)
+
 
         # [Status bar]
         self.status_bar.setSizeGripEnabled(False)
@@ -713,3 +720,18 @@ class ImageWindow(QMainWindow):
             self.refresh_image()
         except Exception as error:
             ErrorBox(error)
+
+    def hough(self):
+        from forms.hough_form import HoughForm
+
+        try:
+            result = HoughForm.show_dialog(self)
+            if result is None: return
+            rho, theta, threshold = result
+            theta = theta * np.pi / 180
+            new_image = self.image.hough(rho, theta, threshold)
+            new_window = ImageWindow(new_image)
+            new_window.show()
+        except Exception as error:
+            ErrorBox(error)
+
