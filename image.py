@@ -1,4 +1,3 @@
-import cv2
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
@@ -46,6 +45,13 @@ class Padding(Enum):
 class DesiredDepth(Enum):
     U8 = cv.CV_8U
     F64 = cv.CV_64F
+
+
+class StructuringElementShape(Enum):
+    ELLIPSE = "ELLIPSE"
+    RECTANGLE = "RECTANGLE"
+    CROSS = "CROSS"
+    RHOMBUS = "RHOMBUS"
 
 
 def grayscale_only(method):
@@ -453,6 +459,31 @@ class Image:
             if cv.countNonZero(img_copy) == 0:
                 self.img = skel
                 break
+
+    @grayscale_only
+    def hough(self, rho, theta, threshold) -> "Image":
+        lines = cv.HoughLines(self.img, rho, theta, threshold)
+        n = len(lines)
+        img_copy = self.img.copy()
+        thickness = 2
+        color = (255, 0, 0)
+        length = (max(self.img.shape) // 1000 + 1) * 1000
+        for i in range(n):
+            rho_local = lines[i][0]
+            theta_local = lines[i][1]
+            a = np.cos(theta_local)
+            b = np.sin(theta_local)
+            x0 = a * rho_local
+            y0 = b * rho_local
+            pt1 = (x0 + length * (-b), y0 + length * a)
+            pt2 = (x0 - length * (-b), y0 - length * a)
+            cv.line(img_copy, pt1, pt2, color, thickness, cv.LINE_AA)
+
+        result = Image.from_numpy(img_copy, f"hough_{self.name}")
+        return result
+
+
+
 
 
 class Histogram:
