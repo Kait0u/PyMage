@@ -15,13 +15,13 @@ def test():
 
     p = r"C:\Users\jjaw-\Downloads\harold.jpg"
     # p = r"C:\Users\jjaw-\Downloads\lena.png"
-    p = r"C:\Users\jjaw-\Downloads\sudoku.png"
 
     im = Image.from_file(p)
-    im.convert_color(ColorModes.GRAY)
-    # im.canny(50, 150)
-    h = im.hough(1, np.pi / 180, 180)
-    h.show()
+
+    b = bresenham(0, 5, 12, 25)
+    for el in b:
+        x, y = el[0], el[1]
+        print(im.img[x, y])
 
 
 def main():

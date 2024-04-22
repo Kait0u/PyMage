@@ -3,7 +3,7 @@ from PyQt5.QtGui import QKeySequence
 from PyQt5.QtWidgets import QSlider, QWidget, QHBoxLayout, QPushButton, QLabel, QSizePolicy, QToolButton
 from math import log10, floor
 
-SCALING = [10, 25, 50, 100, 150, 200, 300, 400, 500]
+SCALING = [10, 25, 50, 100, 200, 400]
 DEFAULT = 100
 DEFAULT_IDX = SCALING.index(DEFAULT)
 MAX_DIGITS = len(str(max(SCALING)))

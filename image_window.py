@@ -8,14 +8,13 @@ from error_box import ErrorBox
 from image import Image, ColorModes
 from histogram_window import HistogramWindow
 from image_utils import structuring_element
+from utils import bresenham
 from widgets.scale_slider import ScaleSlider
 from window_manager import WINDOW_MANAGER
 
 LMIN = 0
 LMAX = 255
 
-USER_SCREEN_WIDTH = 1920
-USER_SCREEN_HEIGHT = 1080
 
 class ImageWindow(QMainWindow):
     def __init__(self, image: Image):
@@ -237,6 +236,10 @@ class ImageWindow(QMainWindow):
         hough_action = QAction("Hough", self)
         hough_action.triggered.connect(self.hough)
         self.analysis_menu.addAction(hough_action)
+
+        profile_action = QAction("Profile Line", self)
+        profile_action.triggered.connect(self.profile_line)
+        self.analysis_menu.addAction(profile_action)
 
 
         # [Status bar]
@@ -735,3 +738,19 @@ class ImageWindow(QMainWindow):
         except Exception as error:
             ErrorBox(error)
 
+    def profile_line(self):
+        from forms.profile_line_form import ProfileLineForm
+        from profile_line_window import ProfileLineWindow
+
+        try:
+            if not self.image.is_gray:
+                raise ValueError("Image is not gray")
+
+            result = ProfileLineForm.show_dialog(self.image, self)
+            if result is None: return
+            x1, y1, x2, y2 = result
+            line = bresenham(x1, y1, x2, y2)
+            profile_window = ProfileLineWindow(self.image, line, self)
+            profile_window.show()
+        except Exception as error:
+            ErrorBox(error)
