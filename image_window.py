@@ -241,6 +241,10 @@ class ImageWindow(QMainWindow):
         profile_action.triggered.connect(self.profile_line)
         self.analysis_menu.addAction(profile_action)
 
+        pyramid_action = QAction("Image Pyramid", self)
+        pyramid_action.triggered.connect(self.pyramid)
+        self.analysis_menu.addAction(pyramid_action)
+
 
         # [Status bar]
         self.status_bar.setSizeGripEnabled(False)
@@ -752,5 +756,22 @@ class ImageWindow(QMainWindow):
             line = bresenham(x1, y1, x2, y2)
             profile_window = ProfileLineWindow(self.image, line, self)
             profile_window.show()
+        except Exception as error:
+            ErrorBox(error)
+
+    def pyramid(self):
+        from forms.pyramid_form import PyramidForm
+
+        try:
+            result = PyramidForm.show_dialog(self)
+            if result is None: return
+            do_quarter, do_half, do_double, do_quadruple = result
+            skip_quarter, skip_half, skip_double, skip_quadruple = (
+                not do_quarter, not do_half, not do_double, not do_quadruple)
+            pyramid = self.image.pyramid(skip_quarter, skip_half, skip_double, skip_quadruple)
+            for image in pyramid:
+                new_window = ImageWindow(image)
+                new_window.show()
+
         except Exception as error:
             ErrorBox(error)

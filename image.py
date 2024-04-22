@@ -483,6 +483,26 @@ class Image:
         result = Image.from_numpy(img_copy, f"hough_{self.name}")
         return result
 
+    def pyramid(self, skip_quarter=False, skip_half=False, skip_double=False, skip_quadruple=False) -> list["Image"]:
+        results = []
+        w, h = map(int, self.img.shape[:2])
+        if not skip_quarter:
+            temp = cv.pyrDown(self.img)
+            temp = cv.pyrDown(temp)
+            results.append(Image.from_numpy(temp, f"25%_{self.name}"))
+        if not skip_half:
+            temp = cv.pyrDown(self.img)
+            results.append(Image.from_numpy(temp, f"50%_{self.name}"))
+        if not skip_double:
+            temp = cv.pyrUp(self.img)
+            results.append(Image.from_numpy(temp, f"200%_{self.name}"))
+        if not skip_quadruple:
+            temp = cv.pyrUp(self.img)
+            temp = cv.pyrUp(temp)
+            results.append(Image.from_numpy(temp, f"400%_{self.name}"))
+
+        return results
+
 
 class Histogram:
     def __init__(self, image: Image, full_range: bool = True) -> None:
