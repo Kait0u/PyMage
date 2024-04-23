@@ -86,13 +86,6 @@ class ProfileLineWindow(QMainWindow):
 
         self.profile_table.update()
 
-    # def update_data(self, update_display: bool = True):
-    #     self.image = self.parent_window.image
-    #     self.histogram = self.image.histogram
-    #     self.setWindowTitle(f"Histogram: {self.image.name}")
-    #
-    #     if update_display: self.update_display()
-
     def update_display(self):
         self.generate_table()
         self.draw()
