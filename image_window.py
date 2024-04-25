@@ -245,6 +245,15 @@ class ImageWindow(QMainWindow):
         pyramid_action.triggered.connect(self.pyramid)
         self.analysis_menu.addAction(pyramid_action)
 
+        self.analysis_menu.addSeparator()
+
+        # Segmentation submenu
+        self.segmentation_menu = self.analysis_menu.addMenu("&Segmentation")
+
+        thresholding_action = QAction("Thresholding", self)
+        thresholding_action.triggered.connect(self.thresholding)
+        self.segmentation_menu.addAction(thresholding_action)
+
 
         # [Status bar]
         self.status_bar.setSizeGripEnabled(False)
@@ -772,6 +781,19 @@ class ImageWindow(QMainWindow):
             for image in pyramid:
                 new_window = ImageWindow(image)
                 new_window.show()
+
+        except Exception as error:
+            ErrorBox(error)
+
+    def thresholding(self):
+        from forms.thresholding_form import ThresholdingForm
+
+        try:
+            result = ThresholdingForm.show_dialog(self)
+            if result is None: return
+            th, inv = result
+            self.image.thresholding(th, inv)
+            self.refresh_image()
 
         except Exception as error:
             ErrorBox(error)
