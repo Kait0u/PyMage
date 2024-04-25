@@ -503,6 +503,28 @@ class Image:
 
         return results
 
+    @grayscale_only
+    def thresholding(self, threshold: int, inv: bool = False):
+        thresholding_mode = cv.THRESH_BINARY if not inv else cv.THRESH_BINARY_INV
+        th, result = cv.threshold(self.img, threshold, LMAX, thresholding_mode)
+        self.img = result
+
+    @grayscale_only
+    def adaptive_thresholding(self, block_size: int, c: float, gaussian_mode: bool = False, inv: bool = False):
+        if block_size % 2 == 0 or block_size < 3:
+            raise ValueError("Block size must be odd and greater than 3.")
+
+        method = cv.ADAPTIVE_THRESH_MEAN_C if not gaussian_mode else cv.ADAPTIVE_THRESH_GAUSSIAN_C
+        thresholding_mode = cv.THRESH_BINARY if not inv else cv.THRESH_BINARY_INV
+        th, result = cv.adaptiveThreshold(self.img, LMAX, method, thresholding_mode, block_size, c)
+        self.img = result
+
+    @grayscale_only
+    def otsu_thresholding(self, inv: bool = False):
+        thresholding_mode = cv.THRESH_BINARY if not inv else cv.THRESH_BINARY_INV
+        th, result = cv.threshold(self.img, 0, LMAX, thresholding_mode + cv.THRESH_OTSU)
+        self.img = result
+
 
 class Histogram:
     def __init__(self, image: Image, full_range: bool = True) -> None:
