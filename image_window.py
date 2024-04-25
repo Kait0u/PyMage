@@ -306,6 +306,10 @@ class ImageWindow(QMainWindow):
         if not self.image.is_gray:
             raise Exception("Image is not a grayscale image")
 
+    def check_binary(self):
+        if not self.image.is_binary:
+            raise Exception("Image is not a binary image")
+
     def update_color_status(self):
         if self.image.is_binary:
             self.color_status_label.setText("GRAY (BIN)")
@@ -676,6 +680,7 @@ class ImageWindow(QMainWindow):
         from forms.morphology_form import MorphologyForm
 
         try:
+            self.check_binary()
             result = MorphologyForm.show_dialog("Erosion", self)
             if result is None: return
             shape, size, padding = result
@@ -689,6 +694,7 @@ class ImageWindow(QMainWindow):
         from forms.morphology_form import MorphologyForm
 
         try:
+            self.check_binary()
             result = MorphologyForm.show_dialog("Dilation", self)
             if result is None: return
             shape, size, padding = result
@@ -702,6 +708,7 @@ class ImageWindow(QMainWindow):
         from forms.morphology_form import MorphologyForm
 
         try:
+            self.check_binary()
             result = MorphologyForm.show_dialog("Opening", self)
             if result is None: return
             shape, size, padding = result
@@ -715,6 +722,7 @@ class ImageWindow(QMainWindow):
         from forms.morphology_form import MorphologyForm
 
         try:
+            self.check_binary()
             result = MorphologyForm.show_dialog("Closing", self)
             if result is None: return
             shape, size, padding = result
@@ -728,6 +736,7 @@ class ImageWindow(QMainWindow):
         from forms.morphology_form import MorphologyForm
 
         try:
+            self.check_binary()
             result = MorphologyForm.show_dialog("Skeletonization", self)
             if result is None: return
             shape, size, padding = result
@@ -741,6 +750,7 @@ class ImageWindow(QMainWindow):
         from forms.hough_form import HoughForm
 
         try:
+            self.check_gray()
             result = HoughForm.show_dialog(self)
             if result is None: return
             rho, theta, threshold = result
@@ -756,9 +766,7 @@ class ImageWindow(QMainWindow):
         from profile_line_window import ProfileLineWindow
 
         try:
-            if not self.image.is_gray:
-                raise ValueError("Image is not gray")
-
+            self.check_gray()
             result = ProfileLineForm.show_dialog(self.image, self)
             if result is None: return
             x1, y1, x2, y2 = result
@@ -789,6 +797,7 @@ class ImageWindow(QMainWindow):
         from forms.thresholding_form import ThresholdingForm
 
         try:
+            self.check_gray()
             result = ThresholdingForm.show_dialog(self)
             if result is None: return
             th, inv = result
