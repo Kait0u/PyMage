@@ -254,6 +254,10 @@ class ImageWindow(QMainWindow):
         thresholding_action.triggered.connect(self.thresholding)
         self.segmentation_menu.addAction(thresholding_action)
 
+        adaptive_thresholding_action = QAction("Adaptive Thresholding", self)
+        adaptive_thresholding_action.triggered.connect(self.adaptive_thresholding)
+        self.segmentation_menu.addAction(adaptive_thresholding_action)
+
 
         # [Status bar]
         self.status_bar.setSizeGripEnabled(False)
@@ -802,6 +806,20 @@ class ImageWindow(QMainWindow):
             if result is None: return
             th, inv = result
             self.image.thresholding(th, inv)
+            self.refresh_image()
+
+        except Exception as error:
+            ErrorBox(error)
+
+    def adaptive_thresholding(self):
+        from forms.adaptive_thresholding_form import AdaptiveThresholdingForm
+
+        try:
+            self.check_gray()
+            result = AdaptiveThresholdingForm.show_dialog(self)
+            if result is None: return
+            block_size, gaussian_mode, c, inv = result
+            self.image.adaptive_thresholding(block_size, c, gaussian_mode, inv)
             self.refresh_image()
 
         except Exception as error:

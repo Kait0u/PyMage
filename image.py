@@ -516,7 +516,7 @@ class Image:
 
         method = cv.ADAPTIVE_THRESH_MEAN_C if not gaussian_mode else cv.ADAPTIVE_THRESH_GAUSSIAN_C
         thresholding_mode = cv.THRESH_BINARY if not inv else cv.THRESH_BINARY_INV
-        th, result = cv.adaptiveThreshold(self.img, LMAX, method, thresholding_mode, block_size, c)
+        result = cv.adaptiveThreshold(self.img, LMAX, method, thresholding_mode, block_size, c)
         self.img = result
 
     @grayscale_only
