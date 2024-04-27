@@ -14,7 +14,7 @@ Credit project for Image Processing Algorithms class
 - Image arithmetics
 - Convolution using filters
 
-## Class 3 (WIP)
+## Class 3
 - Morphology Ops
 - Image Pyramid
 - Profile Line
