@@ -18,3 +18,5 @@ Credit project for Image Processing Algorithms class
 - Morphology Ops
 - Image Pyramid
 - Profile Line
+
+## Class 4 (WIP)
