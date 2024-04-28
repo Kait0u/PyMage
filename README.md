@@ -20,3 +20,4 @@ Credit project for Image Processing Algorithms class
 - Profile Line
 
 ## Class 4 (WIP)
+- Segmentation via Thresholding
