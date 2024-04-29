@@ -258,6 +258,9 @@ class ImageWindow(QMainWindow):
         adaptive_thresholding_action.triggered.connect(self.adaptive_thresholding)
         self.segmentation_menu.addAction(adaptive_thresholding_action)
 
+        otsu_thresholding_action = QAction("Otsu Thresholding", self)
+        otsu_thresholding_action.triggered.connect(self.otsu_thresholding)
+        self.segmentation_menu.addAction(otsu_thresholding_action)
 
         # [Status bar]
         self.status_bar.setSizeGripEnabled(False)
