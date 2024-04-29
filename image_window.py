@@ -824,3 +824,17 @@ class ImageWindow(QMainWindow):
 
         except Exception as error:
             ErrorBox(error)
+
+    def otsu_thresholding(self):
+        from forms.otsu_form import OtsuForm
+
+        try:
+            self.check_gray()
+            result = OtsuForm.show_dialog(self)
+            if result is None: return
+            inv = result
+            self.image.otsu_thresholding(inv)
+            self.refresh_image()
+
+        except Exception as error:
+            ErrorBox(error)
