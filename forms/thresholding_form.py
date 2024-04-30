@@ -1,11 +1,20 @@
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QSpinBox,
-                             QDialog, QDialogButtonBox, QDoubleSpinBox, QComboBox, QCheckBox)
+                             QDialog, QDialogButtonBox, QDoubleSpinBox, QComboBox, QCheckBox, QGroupBox, QLabel)
+
+from image import ColorModes
+
+MAX_SIZE = 256
 
 
 class ThresholdingForm(QDialog):
     def __init__(self, parent: QMainWindow | None = None):
         super().__init__()
+
+        self.orig_image = parent.image
+        self.image = self.orig_image.copy()
+
         self.threshold = 255 // 2
         self.inv = False
 
@@ -38,6 +47,21 @@ class ThresholdingForm(QDialog):
         self.inv_checkbox.stateChanged.connect(self.inv_toggled)
         form_layout.addRow("Inverted", self.inv_checkbox)
 
+        # Preview
+
+        preview_widget = QGroupBox()
+        preview_widget.setTitle("Preview")
+        preview_layout = QVBoxLayout()
+        preview_widget.setLayout(preview_layout)
+        main_layout.addWidget(preview_widget)
+
+        self.image_frame = QLabel()
+        self.image_frame.setMinimumSize(MAX_SIZE, MAX_SIZE)
+        self.image_frame.setMaximumSize(MAX_SIZE, MAX_SIZE)
+        preview_layout.addWidget(self.image_frame)
+
+        self.update_preview()
+
         buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
         self.button_box = QDialogButtonBox(buttons)
         self.button_box.accepted.connect(self.accept)
@@ -51,13 +75,43 @@ class ThresholdingForm(QDialog):
 
     def th_value_changed(self, val):
         self.threshold = val
+        self.update_preview()
 
     def inv_toggled(self, val):
         self.inv = self.inv_checkbox.isChecked()
+        self.update_preview()
 
     def accept(self):
         if self.is_data_valid: super().accept()
         else: print("Invalid data")
+
+    def refresh_image(self):
+        color_format = QImage.Format_RGB888 if self.image.color_mode != ColorModes.GRAY else QImage.Format_Grayscale8
+
+        qt_image = QImage(self.image.img, self.image.width,
+                          self.image.height, self.image.img.strides[0], color_format)
+
+        w = self.image.width
+        h = self.image.height
+
+        if w > h:
+            ratio = h / w
+            w = MAX_SIZE
+            h = int(MAX_SIZE * ratio)
+        else:
+            ratio = w / h
+            h = MAX_SIZE
+            w = int(MAX_SIZE * ratio)
+
+        qt_image = QPixmap.fromImage(qt_image).scaled(w, h)
+        self.image_frame.setPixmap(qt_image)
+        self.image_frame.setAlignment(Qt.AlignCenter)
+
+    def update_preview(self):
+        self.image = self.orig_image.copy()
+        self.image.thresholding(self.threshold, self.inv)
+        self.refresh_image()
+
 
     @staticmethod
     def show_dialog(parent=None) -> tuple[int, bool] | None:
