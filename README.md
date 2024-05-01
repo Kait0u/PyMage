@@ -21,3 +21,4 @@ Credit project for Image Processing Algorithms class
 
 ## Class 4 (WIP)
 - Segmentation via Thresholding
+- Segmentation via GrabCut
