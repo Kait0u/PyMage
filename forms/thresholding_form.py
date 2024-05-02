@@ -3,7 +3,7 @@ from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QSpinBox,
                              QDialog, QDialogButtonBox, QDoubleSpinBox, QComboBox, QCheckBox, QGroupBox, QLabel)
 
-from image import ColorModes
+from image import ColorModes, Image
 
 MAX_SIZE = 256
 
@@ -12,8 +12,8 @@ class ThresholdingForm(QDialog):
     def __init__(self, parent: QMainWindow | None = None):
         super().__init__()
 
-        self.orig_image = parent.image
-        self.image = self.orig_image.copy()
+        self.orig_image: Image = parent.image
+        self.image: Image = self.orig_image.copy()
 
         self.threshold = 255 // 2
         self.inv = False
