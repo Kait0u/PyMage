@@ -262,6 +262,12 @@ class ImageWindow(QMainWindow):
         otsu_thresholding_action.triggered.connect(self.otsu_thresholding)
         self.segmentation_menu.addAction(otsu_thresholding_action)
 
+        self.segmentation_menu.addSeparator()
+
+        grabcut_rect_action = QAction("GrabCut (Rect)", self)
+        grabcut_rect_action.triggered.connect(self.grabcut_rect)
+        self.segmentation_menu.addAction(grabcut_rect_action)
+
         # [Status bar]
         self.status_bar.setSizeGripEnabled(False)
 
@@ -841,3 +847,18 @@ class ImageWindow(QMainWindow):
 
         except Exception as error:
             ErrorBox(error)
+
+    def grabcut_rect(self):
+        from forms.grabcut_rect_form import GrabCutRectForm
+
+        try:
+            result = GrabCutRectForm.show_dialog(self)
+            if result is None: return
+            x, y, w, h, iter_count = result
+            new_image = self.image.grabcut_rect((x, y, w, h), iter_count)
+            new_window = ImageWindow(new_image)
+            new_window.show()
+
+        except Exception as error:
+            ErrorBox(error)
+
