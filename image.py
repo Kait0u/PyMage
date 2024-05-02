@@ -485,7 +485,6 @@ class Image:
 
     def pyramid(self, skip_quarter=False, skip_half=False, skip_double=False, skip_quadruple=False) -> list["Image"]:
         results = []
-        w, h = map(int, self.img.shape[:2])
         if not skip_quarter:
             temp = cv.pyrDown(self.img)
             temp = cv.pyrDown(temp)
