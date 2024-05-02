@@ -3,6 +3,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QSpinBox,
                              QDialog, QDialogButtonBox)
 
+from error_box import ErrorBox
 from widgets.mplcanvas import MplCanvas
 
 LMIN = 0
@@ -88,7 +89,7 @@ class PosterizeForm(QDialog):
 
     def accept(self):
         if self.is_data_valid: super().accept()
-        else: print("Invalid data")
+        else: ErrorBox("Invalid data")
 
     @staticmethod
     def show_dialog(parent=None) -> int | None:

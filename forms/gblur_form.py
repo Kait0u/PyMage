@@ -2,6 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QSpinBox,
                              QDialog, QDialogButtonBox, QDoubleSpinBox, QComboBox, QCheckBox)
 
+from error_box import ErrorBox
 from image import Padding
 
 
@@ -101,7 +102,7 @@ class GBlurForm(QDialog):
 
     def accept(self):
         if self.is_data_valid: super().accept()
-        else: print("Invalid data")
+        else: ErrorBox("Invalid data")
 
     @staticmethod
     def show_dialog(parent=None) -> int | None:

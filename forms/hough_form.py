@@ -2,6 +2,8 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QSpinBox,
                              QDialog, QDialogButtonBox, QDoubleSpinBox)
 
+from error_box import ErrorBox
+
 
 class HoughForm(QDialog):
     def __init__(self, parent: QMainWindow | None = None):
@@ -71,7 +73,7 @@ class HoughForm(QDialog):
 
     def accept(self):
         if self.is_data_valid: super().accept()
-        else: print("Invalid data")
+        else: ErrorBox("Invalid data")
 
     @staticmethod
     def show_dialog(parent=None) -> tuple[float, float, int] | None:

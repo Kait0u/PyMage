@@ -2,6 +2,7 @@ import numpy as np
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QDialog, QDialogButtonBox, QComboBox)
 
+from error_box import ErrorBox
 from forms.form_widgets.np_tablewidget import NpTableWidget
 from image import DesiredDepth, Padding
 from masks.laplace_masks import LaplaSharpen
@@ -92,7 +93,7 @@ class LaplaSharpenForm(QDialog):
 
     def accept(self):
         if self.is_data_valid: super().accept()
-        else: print("Invalid data")
+        else: ErrorBox("Invalid data")
 
     @staticmethod
     def show_dialog(parent=None) -> tuple[np.ndarray, DesiredDepth, Padding] | None:

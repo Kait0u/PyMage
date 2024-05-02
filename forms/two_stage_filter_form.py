@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QSp
                              QDialog, QDialogButtonBox, QDoubleSpinBox, QComboBox, QCheckBox, QPushButton, QTableView,
                              QAbstractItemView, QTableWidget, QHeaderView, QHBoxLayout, QLabel, QFrame)
 
+from error_box import ErrorBox
 from forms.form_widgets.np_tablewidget import NpTableWidget
 from image import DesiredDepth, Padding
 from utils import convolve_filters
@@ -154,7 +155,7 @@ class TwoStageFilterForm(QDialog):
 
     def accept(self):
         if self.is_data_valid: super().accept()
-        else: print("Invalid data")
+        else: ErrorBox("Invalid data")
 
     @staticmethod
     def show_dialog(parent=None) -> tuple[np.ndarray, DesiredDepth, Padding, bool] | None:

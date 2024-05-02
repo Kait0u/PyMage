@@ -3,6 +3,7 @@ from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QSpinBox,
                              QDialog, QDialogButtonBox, QDoubleSpinBox, QComboBox, QCheckBox, QGroupBox, QLabel)
 
+from error_box import ErrorBox
 from image import ColorModes, Image
 
 MAX_SIZE = 256
@@ -83,7 +84,7 @@ class ThresholdingForm(QDialog):
 
     def accept(self):
         if self.is_data_valid: super().accept()
-        else: print("Invalid data")
+        else: ErrorBox("Invalid data")
 
     def refresh_image(self):
         color_format = QImage.Format_RGB888 if self.image.color_mode != ColorModes.GRAY else QImage.Format_Grayscale8

@@ -2,6 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QSpinBox,
                              QDialog, QDialogButtonBox, QDoubleSpinBox, QComboBox, QCheckBox, QLabel)
 
+from error_box import ErrorBox
 from image import Image
 
 
@@ -90,7 +91,7 @@ class ProfileLineForm(QDialog):
 
     def accept(self):
         if self.is_data_valid: super().accept()
-        else: print("Invalid data")
+        else: ErrorBox("Invalid data")
 
     @staticmethod
     def show_dialog(image: Image, parent=None) -> tuple[int, int, int, int] | None:
