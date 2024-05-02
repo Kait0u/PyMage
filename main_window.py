@@ -121,16 +121,23 @@ class MainWindow(QMainWindow):
             return None
 
     def open_image_gsc(self):
-        path = self.open_file_dialog()
-        if path is not None:
-            imgwin = ImageWindow.from_path(path, True)
-            imgwin.show()
+        try:
+            path = self.open_file_dialog()
+            if path is not None:
+                imgwin = ImageWindow.from_path(path, True)
+                imgwin.show()
+        except Exception as e:
+            ErrorBox("Something went wrong!")
+
 
     def open_image_color(self):
-        path = self.open_file_dialog()
-        if path is not None:
-            imgwin = ImageWindow.from_path(path, False)
-            imgwin.show()
+        try:
+            path = self.open_file_dialog()
+            if path is not None:
+                imgwin = ImageWindow.from_path(path, False)
+                imgwin.show()
+        except Exception as e:
+            ErrorBox("Something went wrong!")
 
 
 def attempt(f):

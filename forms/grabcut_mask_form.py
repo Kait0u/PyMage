@@ -87,7 +87,12 @@ class GrabCutMaskForm(QDialog):
 
     def path_value_changed(self, val):
         path = val
-        img = Image.from_file(path, True)
+
+        try:
+            img = Image.from_file(path, True)
+        except Exception as e:
+            ErrorBox("Something went wrong!")
+            return
 
         if (self.image.width, self.image.height) != (img.width, img.height):
             ErrorBox("Incompatible mask size!")
