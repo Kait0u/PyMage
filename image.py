@@ -555,6 +555,57 @@ class Image:
 
         return Image.from_numpy(temp_img.img, f"GC_{temp_img.name}")
 
+    def watershed(self, inv: bool = True) -> tuple["Image", "Image", "Image", int]:
+        temp = self.copy()
+
+        if temp.is_gray:
+            temp.convert_color(ColorModes.RGB)
+
+        temp_gray = self.copy()
+        temp_gray.convert_color(ColorModes.GRAY)
+        temp_gray.otsu_thresholding(inv)
+
+        kernel = np.ones((3, 3), np.uint8)
+
+        opening = temp_gray.copy()
+        opening.morph_open(kernel, Padding.ISOLATED)
+
+        sure_bg = opening.copy()
+        sure_bg.dilate(kernel, Padding.ISOLATED)
+
+        dist_trans = cv.distanceTransform(opening.img, cv.DIST_L2, 5)
+        _, sure_fg = cv.threshold(dist_trans, 0.5 * dist_trans.max(), 255, 0)
+        sure_fg = np.uint8(sure_fg)
+        sure_fg = Image.from_numpy(sure_fg, "sure_fg")
+
+        unknown = cv.subtract(sure_bg.img, sure_fg.img)
+
+        _, markers = cv.connectedComponents(sure_fg.img)
+
+        markers += 1
+        markers[unknown == 255] = 0
+
+        markers = cv.watershed(temp.img, markers)
+        temp_gray.img[markers == -1] = 255
+        temp.img[markers == -1] = (255, 0, 0)
+
+        binary_mask = np.zeros_like(temp_gray.img)
+        binary_mask[markers > 1] = LMAX
+
+        result = Image.from_numpy(temp.img, f"WS_{self.name}")
+
+        colors = Image.from_numpy(
+            cv.cvtColor(cv.applyColorMap(np.uint8(markers * 10), cv.COLORMAP_PARULA), cv.COLOR_BGR2RGB),
+            f"WS_COLORMAP_{self.name}")
+
+        bin_mask = Image.from_numpy(
+            binary_mask,
+            f"WS_BINARY_{self.name}")
+
+        found = np.max(markers) - 1
+
+        return result, colors, bin_mask, found
+
 
 class Histogram:
     def __init__(self, image: Image, full_range: bool = True) -> None:
