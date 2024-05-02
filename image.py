@@ -540,6 +540,21 @@ class Image:
 
         return Image.from_numpy(temp_img.img, f"GC_{temp_img.name}")
 
+    def grabcut_mask(self, mask: np.ndarray, iter_count: int = 3) -> "Image":
+        temp_img = self.copy()
+        temp_img.convert_color(ColorModes.RGB)
+
+        bg_model = np.zeros((1, 65), np.float64)
+        fg_model = np.zeros((1, 65), np.float64)
+
+        out_mask, *_ = cv.grabCut(temp_img.img, mask, None, bg_model, fg_model, iter_count, cv.GC_INIT_WITH_MASK)
+        out_mask = np.where((mask == 0) | (mask == 2), 0, 1)
+        out_mask = np.uint8(out_mask)
+
+        temp_img.img *= out_mask[:,:,np.newaxis]
+
+        return Image.from_numpy(temp_img.img, f"GC_{temp_img.name}")
+
 
 class Histogram:
     def __init__(self, image: Image, full_range: bool = True) -> None:
