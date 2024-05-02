@@ -8,6 +8,7 @@ from error_box import ErrorBox
 from image import Image, ColorModes
 from histogram_window import HistogramWindow
 from image_utils import structuring_element
+from info_box import InfoBox
 from utils import bresenham
 from widgets.scale_slider import ScaleSlider
 from window_manager import WINDOW_MANAGER
@@ -271,6 +272,12 @@ class ImageWindow(QMainWindow):
         grabcut_mask_action = QAction("GrabCut (Mask)", self)
         grabcut_mask_action.triggered.connect(self.grabcut_mask)
         self.segmentation_menu.addAction(grabcut_mask_action)
+
+        self.segmentation_menu.addSeparator()
+
+        watershed_action = QAction("Watershed", self)
+        watershed_action.triggered.connect(self.watershed)
+        self.segmentation_menu.addAction(watershed_action)
 
         # [Status bar]
         self.status_bar.setSizeGripEnabled(False)
@@ -876,6 +883,29 @@ class ImageWindow(QMainWindow):
             new_image = self.image.grabcut_mask(mask, iter_count)
             new_window = ImageWindow(new_image)
             new_window.show()
+
+        except Exception as error:
+            ErrorBox(error)
+
+    def watershed(self):
+        from forms.watershed_form import WatershedForm
+
+        try:
+            result = WatershedForm.show_dialog(self)
+            if result is None: return
+            do_boundaries, do_colors, do_bin, inv = result
+            boundaries, colors, binary, found = self.image.watershed(inv)
+            if do_boundaries:
+                new_window = ImageWindow(boundaries)
+                new_window.show()
+            if do_colors:
+                new_window = ImageWindow(colors)
+                new_window.show()
+            if do_bin:
+                new_window = ImageWindow(binary)
+                new_window.show()
+
+            InfoBox("Watershed", f"{found} objects have been found.")
 
         except Exception as error:
             ErrorBox(error)
