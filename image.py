@@ -606,6 +606,28 @@ class Image:
 
         return result, colors, bin_mask, found
 
+    def inpaint_telea(self, mask: np.ndarray, iter_count: int = 3) -> "Image":
+        if mask.shape[:2] != self.img.shape[:2]:
+            raise ValueError("Mask incompatible with image!")
+        elif mask.ndim != 2:
+            raise ValueError("Invalid mask!")
+
+        result = cv.inpaint(self.img, mask, iter_count, cv.INPAINT_TELEA)
+        result_img = Image.from_numpy(result, f"INPAINT_{self.name}")
+
+        return result_img
+
+    def inpaint_ns(self, mask: np.ndarray, iter_count: int = 3) -> "Image":
+        if mask.shape[:2] != self.img.shape[:2]:
+            raise ValueError("Mask incompatible with image!")
+        elif mask.ndim != 2:
+            raise ValueError("Invalid mask!")
+
+        result = cv.inpaint(self.img, mask, iter_count, cv.INPAINT_NS)
+        result_img = Image.from_numpy(result, f"INPAINT_{self.name}")
+
+        return result_img
+
 
 class Histogram:
     def __init__(self, image: Image, full_range: bool = True) -> None:
