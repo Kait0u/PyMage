@@ -268,6 +268,10 @@ class ImageWindow(QMainWindow):
         grabcut_rect_action.triggered.connect(self.grabcut_rect)
         self.segmentation_menu.addAction(grabcut_rect_action)
 
+        grabcut_mask_action = QAction("GrabCut (Mask)", self)
+        grabcut_mask_action.triggered.connect(self.grabcut_mask)
+        self.segmentation_menu.addAction(grabcut_mask_action)
+
         # [Status bar]
         self.status_bar.setSizeGripEnabled(False)
 
@@ -862,3 +866,16 @@ class ImageWindow(QMainWindow):
         except Exception as error:
             ErrorBox(error)
 
+    def grabcut_mask(self):
+        from forms.grabcut_mask_form import GrabCutMaskForm
+
+        try:
+            result = GrabCutMaskForm.show_dialog(self)
+            if result is None: return
+            mask, iter_count = result
+            new_image = self.image.grabcut_mask(mask, iter_count)
+            new_window = ImageWindow(new_image)
+            new_window.show()
+
+        except Exception as error:
+            ErrorBox(error)
