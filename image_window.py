@@ -279,6 +279,12 @@ class ImageWindow(QMainWindow):
         watershed_action.triggered.connect(self.watershed)
         self.segmentation_menu.addAction(watershed_action)
 
+        self.segmentation_menu.addSeparator()
+
+        inpainting_action = QAction("Inpainting", self)
+        inpainting_action.triggered.connect(self.inpaint)
+        self.segmentation_menu.addAction(inpainting_action)
+
         # [Status bar]
         self.status_bar.setSizeGripEnabled(False)
 
@@ -909,3 +915,26 @@ class ImageWindow(QMainWindow):
 
         except Exception as error:
             ErrorBox(error)
+
+    def inpaint(self):
+        from forms.inpainting_form import InpaintingForm
+
+        try:
+            result = InpaintingForm.show_dialog(self)
+            if result is None: return
+            mask, iter_count, mode = result
+            inpainted = None
+            match mode:
+                case "TELEA":
+                    inpainted = self.image.inpaint_telea(mask, iter_count)
+                case "NS":
+                    inpainted = self.image.inpaint_ns(mask, iter_count)
+                case _:
+                    raise ValueError("Something went wrong establishing the mode!")
+            new_window = ImageWindow(inpainted)
+            new_window.show()
+
+        except Exception as error:
+            ErrorBox(error)
+
+
