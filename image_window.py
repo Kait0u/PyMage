@@ -279,11 +279,13 @@ class ImageWindow(QMainWindow):
         watershed_action.triggered.connect(self.watershed)
         self.segmentation_menu.addAction(watershed_action)
 
-        self.segmentation_menu.addSeparator()
+        # -----------------------------
 
-        inpainting_action = QAction("Inpainting", self)
+        self.analysis_menu.addSeparator()
+
+        inpainting_action = QAction("Inpaint", self)
         inpainting_action.triggered.connect(self.inpaint)
-        self.segmentation_menu.addAction(inpainting_action)
+        self.analysis_menu.addAction(inpainting_action)
 
         # [Status bar]
         self.status_bar.setSizeGripEnabled(False)
