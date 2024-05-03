@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Any, Sequence
 
 import cv2 as cv
 import numpy as np
@@ -7,7 +7,13 @@ import os.path
 from enum import Enum
 import functools
 
+from cv2 import Mat
+from numpy import ndarray, dtype, generic
+from random import randint
+
+
 from utils import cumsum
+
 
 LMIN = 0
 LMAX = 255
@@ -643,15 +649,29 @@ class Image:
 
     @binary_only
     def get_contours(self,
-                     mode: Literal["LIST", "EXTERNAL"] = "LIST",
-                     approximation: Literal["SIMPLE", "TC89_L1", "TC89_KCOS", "NONE"] = "SIMPLE"):
+                     mode: Literal["LIST", "EXTERNAL"] | str = "LIST",
+                     approximation: Literal["SIMPLE", "TC89_L1", "TC89_KCOS", "NONE"] | str = "SIMPLE",
+                     ) -> Sequence[Mat | ndarray[Any, dtype[generic]] | ndarray]:
         fc_mode = RETRIEVAL_MODES[mode]
         fc_approximation = CONTOUR_APPROXIMATION_MODES[approximation]
         contours, hierarchy = cv.findContours(self.img, fc_mode, fc_approximation)
 
         return contours
 
+    @binary_only
+    def colorful_contours(self, contours: Sequence[Mat | ndarray[Any, dtype[generic]] | ndarray]) -> "Image":
+        result = self.copy()
+        result.convert_color(ColorModes.RGB)
+        result.name = f"CONT_{result.name}"
 
+        color_map = plt.get_cmap("viridis")
+
+        for cnt in contours:
+            r = randint(0, color_map.N - 1)
+            color = np.array(color_map(r, 1, True)[:3], dtype=np.float64)
+            result.img = cv.drawContours(result.img, [cnt], 0, color, 3)
+
+        return result
 
 
 class Histogram:
