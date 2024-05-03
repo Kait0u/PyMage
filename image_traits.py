@@ -12,7 +12,7 @@ def area(cnt: np.ndarray) -> float:
     return res_area
 
 
-def perimeter(cnt: np.ndarray) -> float
+def perimeter(cnt: np.ndarray) -> float:
     peri = cv.arcLength(cnt, True)
     return peri
 
