@@ -7,6 +7,7 @@ from error_box import ErrorBox
 
 from image import Image, ColorModes
 from histogram_window import HistogramWindow
+from object_traits_window import ObjectTraitsWindow
 from image_utils import structuring_element
 from info_box import InfoBox
 from utils import bresenham
@@ -294,7 +295,7 @@ class ImageWindow(QMainWindow):
         self.analysis_menu.addAction(contours_action)
 
         traits_action = QAction("Object Traits", self)
-
+        traits_action.triggered.connect(self.object_traits)
         self.analysis_menu.addAction(traits_action)
 
         # [Status bar]
@@ -958,9 +959,30 @@ class ImageWindow(QMainWindow):
             if result is None: return
             mode, approximation = result
             contours = self.image.get_contours(mode, approximation)
-            new_image = self.image.colorful_contours(contours)
+
+            contours_count = len(contours)
+            InfoBox("Results", f"{contours_count} contours have been found!")
+
+            new_image = self.image.colorful_contours(contours, False, None)
             new_window = ImageWindow(new_image)
             new_window.show()
+
+        except Exception as error:
+            ErrorBox(error)
+
+    def object_traits(self):
+        from forms.contour_extraction_form import ContourExtractionForm
+
+        try:
+            self.check_binary()
+            result = ContourExtractionForm.show_dialog(self, "Object Traits")
+            if result is None: return
+            mode, approximation = result
+            contours = self.image.get_contours(mode, approximation)
+            if len(contours) == 0:
+                raise ValueError("No contours have been found.")
+            traits_window = ObjectTraitsWindow(contours, self)
+            traits_window.show()
 
         except Exception as error:
             ErrorBox(error)
