@@ -23,6 +23,10 @@ class ProfileLineWindow(QMainWindow):
         self.ymin = 0
         self.ymax = 255
 
+        title = "Profile Line"
+        if parent is not None:
+            title = f"{parent.image.name if parent.image is not None else parent.windowTitle()} | {title}"
+
         self.widget = QWidget(self)
         self.layout = QVBoxLayout()
         self.widget.setLayout(self.layout)
@@ -93,7 +97,6 @@ class ProfileLineWindow(QMainWindow):
         self.update()
 
     def closeEvent(self, event):
-        self.parent_window.histogram_window = None
         WINDOW_MANAGER.remove_window(self)
         event.accept()
 
