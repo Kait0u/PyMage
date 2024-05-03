@@ -1,6 +1,3 @@
-from typing import List, Tuple
-
-import cv2
 import numpy as np
 from scipy.signal import convolve2d
 
