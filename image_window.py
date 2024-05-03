@@ -287,6 +287,16 @@ class ImageWindow(QMainWindow):
         inpainting_action.triggered.connect(self.inpaint)
         self.analysis_menu.addAction(inpainting_action)
 
+        self.analysis_menu.addSeparator()
+
+        contours_action = QAction("Colorful Contours", self)
+        contours_action.triggered.connect(self.colorful_contours)
+        self.analysis_menu.addAction(contours_action)
+
+        traits_action = QAction("Object Traits", self)
+
+        self.analysis_menu.addAction(traits_action)
+
         # [Status bar]
         self.status_bar.setSizeGripEnabled(False)
 
@@ -939,4 +949,18 @@ class ImageWindow(QMainWindow):
         except Exception as error:
             ErrorBox(error)
 
+    def colorful_contours(self):
+        from forms.contour_extraction_form import ContourExtractionForm
 
+        try:
+            self.check_binary()
+            result = ContourExtractionForm.show_dialog(self)
+            if result is None: return
+            mode, approximation = result
+            contours = self.image.get_contours(mode, approximation)
+            new_image = self.image.colorful_contours(contours)
+            new_window = ImageWindow(new_image)
+            new_window.show()
+
+        except Exception as error:
+            ErrorBox(error)
