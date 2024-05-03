@@ -9,8 +9,6 @@ import functools
 
 from cv2 import Mat
 from numpy import ndarray, dtype, generic
-from random import randint
-
 
 from utils import cumsum
 
@@ -659,7 +657,11 @@ class Image:
         return contours
 
     @binary_only
-    def colorful_contours(self, contours: Sequence[Mat | ndarray[Any, dtype[generic]] | ndarray]) -> "Image":
+    def colorful_contours(self, contours: Sequence[Mat | ndarray[Any, dtype[generic]] | ndarray],
+                          filled: bool = False,
+                          color: tuple[float, float, float] | None = None) -> "Image":
+        from random import randint
+
         result = self.copy()
         result.convert_color(ColorModes.RGB)
         result.name = f"CONT_{result.name}"
@@ -667,9 +669,13 @@ class Image:
         color_map = plt.get_cmap("viridis")
 
         for cnt in contours:
-            r = randint(0, color_map.N - 1)
-            color = np.array(color_map(r, 1, True)[:3], dtype=np.float64)
-            result.img = cv.drawContours(result.img, [cnt], 0, color, 3)
+            if color is None:
+                r = randint(0, color_map.N - 1)
+                c = color_map(r, 1, True)[:3]
+            else:
+                c = color
+            clr = np.array(c, dtype=np.float64)
+            result.img = cv.drawContours(result.img, [cnt], 0, clr, 3 if not filled else cv.FILLED)
 
         return result
 
