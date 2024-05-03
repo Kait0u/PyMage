@@ -9,8 +9,6 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QFormLayout, QSp
                              QHBoxLayout, QListWidgetItem, QListWidget, QTabWidget, QTableWidget, QAbstractItemView,
                              QTableView, QHeaderView, QTableWidgetItem)
 
-from error_box import ErrorBox
-from forms.form_widgets.open_file_widget import OpenFileWidget
 from image import ColorModes, Image
 import image_traits as img_traits
 from window_manager import WINDOW_MANAGER
@@ -115,8 +113,7 @@ class ObjectTraitsWindow(QMainWindow):
         self.update_preview()
         self.update_tables()
 
-
-        # self.setFixedSize(super().size().width() // 2 - 20, super().size().height() + 25)
+        self.setFixedSize(self.size().width(), self.size().height() * 140 // 100)
 
     def refresh_image(self):
         self.image = self.image.colorful_contours([self.curr_cnt], True, YELLOW)
