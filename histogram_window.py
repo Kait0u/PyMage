@@ -49,6 +49,8 @@ class HistogramWindow(QMainWindow):
         self.update_display()
         self.hist_table.cellActivated.connect(self.cell_selected)
 
+        self.setFixedSize(self.size().width(), self.size().width() + 80)
+
     def draw(self, highlight_idx=None):
         self.plot_canvas.axes.clear()
         self.plot_canvas.figure.tight_layout(pad=2)

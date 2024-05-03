@@ -62,6 +62,8 @@ class AdaptiveThresholdingForm(QDialog):
         self.button_box.rejected.connect(self.reject)
         main_layout.addWidget(self.button_box)
 
+        self.setFixedSize(self.size().width() // 2, self.size().height() // 3)
+
     @property
     def is_data_valid(self):
         c1 = 3 <= self.block_size and self.block_size % 2 == 1

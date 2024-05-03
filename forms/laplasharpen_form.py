@@ -72,7 +72,7 @@ class LaplaSharpenForm(QDialog):
         self.button_box.rejected.connect(self.reject)
         main_layout.addWidget(self.button_box)
 
-        # self.setFixedSize(QSize(200, 300))
+        self.setFixedSize(super().size().height() // 2 + 80, super().size().height() - 20)
 
     @property
     def is_data_valid(self):

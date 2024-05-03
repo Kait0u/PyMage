@@ -107,6 +107,8 @@ class ImageArithmeticForm(QDialog):
         if callee is not None:
             self.image1_winpreview.set_current_window(callee)
 
+        self.setFixedSize(self.size().width() + 200, self.size().height())
+
     def refresh_images(self):
         self.image1_winpreview.refresh_available_windows()
         self.image2_winpreview.refresh_available_windows()

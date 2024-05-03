@@ -68,6 +68,8 @@ class ProfileLineForm(QDialog):
         self.button_box.rejected.connect(self.reject)
         main_layout.addWidget(self.button_box)
 
+        self.setFixedSize(super().size().width() // 3, super().size().height() // 2 - 60)
+
     @property
     def is_data_valid(self):
         c1 = 0 <= self.x1 < self.xmax

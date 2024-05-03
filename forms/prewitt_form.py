@@ -92,7 +92,7 @@ class PrewittForm(QDialog):
         self.button_box.rejected.connect(self.reject)
         right_side_layout.addWidget(self.button_box)
 
-        # self.setFixedSize(QSize(200, 300))
+        self.setFixedSize(super().size().width() - 128, super().size().height() - 204)
 
     @property
     def is_data_valid(self):

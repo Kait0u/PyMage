@@ -72,6 +72,8 @@ class GBlurForm(QDialog):
         self.button_box.rejected.connect(self.reject)
         main_layout.addWidget(self.button_box)
 
+        self.setFixedSize(super().size().width() // 2, super().size().height() // 3 + 40)
+
     @property
     def is_data_valid(self):
         c1 = self.size % 2 == 1 and self.size > 2

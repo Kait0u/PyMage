@@ -45,6 +45,8 @@ class CannyForm(QDialog):
         self.button_box.rejected.connect(self.reject)
         main_layout.addWidget(self.button_box)
 
+        self.setFixedSize(self.size().width() // 3, self.size().height() // 3 - 30)
+
     @property
     def is_data_valid(self):
         c1 = 0 <= self.threshold1 <= self.threshold2

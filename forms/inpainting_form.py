@@ -92,6 +92,8 @@ class InpaintingForm(QDialog):
         self.button_box.rejected.connect(self.reject)
         main_layout.addWidget(self.button_box)
 
+        self.setFixedSize(super().size().width() // 2 - 20, super().size().height() + 25)
+
     @property
     def is_data_valid(self):
         c1 = self.mask.shape[:2] == self.image.img.shape[:2]

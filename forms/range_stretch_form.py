@@ -71,6 +71,7 @@ class RangeStretchForm(QDialog):
         main_layout.addWidget(self.button_box)
 
         self.update_data()
+        self.setFixedSize(self.size().height() + 50, self.size().height() + 50)
 
     def recalculate_lut(self):
         self.lut = np.arange(LMIN, LMAX + 1, 1, dtype=np.uint8)

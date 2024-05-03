@@ -21,6 +21,9 @@ class GrabCutMaskForm(QDialog):
         super().__init__()
 
         self.orig_image: Image = parent.image
+        if self.orig_image.img.ndim == 2:
+            self.orig_image = parent.image.copy()
+            self.orig_image.convert_color(ColorModes.RGB)
         self.image: Image = self.orig_image.copy()
 
         self.mask = np.zeros_like(self.image.img)
@@ -79,6 +82,8 @@ class GrabCutMaskForm(QDialog):
         self.button_box.accepted.connect(self.accept)
         self.button_box.rejected.connect(self.reject)
         main_layout.addWidget(self.button_box)
+
+        self.setFixedSize(super().size().width() // 2 - 20, super().size().height() + 25)
 
     @property
     def is_data_valid(self):

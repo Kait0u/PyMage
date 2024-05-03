@@ -64,6 +64,8 @@ class MorphologyForm(QDialog):
         self.button_box.rejected.connect(self.reject)
         main_layout.addWidget(self.button_box)
 
+        self.setFixedSize(super().size().width() // 3, super().size().height() // 3 - 15)
+
     @property
     def is_data_valid(self):
         return self.size % 2 == 1 and self.size > 2

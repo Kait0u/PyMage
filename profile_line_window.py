@@ -55,6 +55,7 @@ class ProfileLineWindow(QMainWindow):
         self.profile_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
         self.update_display()
+        self.setFixedSize(self.size().width(), self.size().width() + 80)
 
     def draw(self):
         self.plot_canvas.axes.clear()

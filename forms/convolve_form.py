@@ -78,6 +78,8 @@ class ConvolveForm(QDialog):
         self.button_box.rejected.connect(self.reject)
         main_layout.addWidget(self.button_box)
 
+        self.setFixedSize(super().size().height() - 60, super().size().height())
+
     def filter_size_idx_changed(self, idx):
         self.filter_size = self.filter_size_options[idx]
         layout = self.filter_table.parent().layout()

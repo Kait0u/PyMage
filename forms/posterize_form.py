@@ -47,6 +47,7 @@ class PosterizeForm(QDialog):
         main_layout.addWidget(self.button_box)
 
         self.update_data()
+        self.setFixedSize(self.size().height(), self.size().height() + 25)
 
     def recalculate_lut(self):
         length = LMAX - LMIN + 1

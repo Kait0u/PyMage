@@ -85,6 +85,8 @@ class BitwiseNotForm(QDialog):
         if callee is not None:
             self.image_winpreview.set_current_window(callee)
 
+        self.setFixedSize(self.size())
+
     def refresh_images(self):
         self.image_winpreview.refresh_available_windows()
 

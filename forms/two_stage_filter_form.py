@@ -128,6 +128,8 @@ class TwoStageFilterForm(QDialog):
         self.button_box.rejected.connect(self.reject)
         main_layout.addWidget(self.button_box)
 
+        self.setFixedSize(super().size().width() - 50, super().size().width())
+
     def padding_idx_changed(self, idx):
         self.padding = self.padding_options[idx]
 
