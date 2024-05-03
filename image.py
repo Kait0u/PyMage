@@ -1,3 +1,5 @@
+from typing import Literal
+
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
@@ -53,6 +55,17 @@ class StructuringElementShape(Enum):
     CROSS = "CROSS"
     RHOMBUS = "RHOMBUS"
 
+RETRIEVAL_MODES = {
+    "EXTERNAL": cv.RETR_EXTERNAL,
+    "LIST": cv.RETR_LIST
+}
+
+CONTOUR_APPROXIMATION_MODES = {
+    "SIMPLE": cv.CHAIN_APPROX_SIMPLE,
+    "NONE": cv.CHAIN_APPROX_NONE,
+    "TC89_L1": cv.CHAIN_APPROX_TC89_L1,
+    "TC89_KCOS": cv.CHAIN_APPROX_TC89_KCOS
+}
 
 def grayscale_only(method):
     @functools.wraps(method)
@@ -627,6 +640,18 @@ class Image:
         result_img = Image.from_numpy(result, f"INPAINT_{self.name}")
 
         return result_img
+
+    @binary_only
+    def get_contours(self,
+                     mode: Literal["LIST", "EXTERNAL"] = "LIST",
+                     approximation: Literal["SIMPLE", "TC89_L1", "TC89_KCOS", "NONE"] = "SIMPLE"):
+        fc_mode = RETRIEVAL_MODES[mode]
+        fc_approximation = CONTOUR_APPROXIMATION_MODES[approximation]
+        contours, hierarchy = cv.findContours(self.img, fc_mode, fc_approximation)
+
+        return contours
+
+
 
 
 class Histogram:
