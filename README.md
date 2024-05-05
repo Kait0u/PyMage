@@ -23,3 +23,4 @@ Credit project for Image Processing Algorithms class
 - Segmentation via Thresholding
 - Segmentation via GrabCut
 - Watershed
+- Inpainting
