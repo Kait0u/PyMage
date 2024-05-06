@@ -20,7 +20,9 @@ Credit project for Image Processing Algorithms class
 - Profile Line
 
 ## Class 4 (WIP)
-- Segmentation via Thresholding
-- Segmentation via GrabCut
-- Watershed
+- Segmentation
+  - Thresholding
+  - GrabCut
+  - Watershed
 - Inpainting
+- Object Traits
