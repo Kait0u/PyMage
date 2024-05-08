@@ -1,8 +1,11 @@
+import os.path
+
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QMainWindow, QMenuBar, QAction, QMessageBox, QFileDialog
 
 import image_arithmetic
 from error_box import ErrorBox
+from image_utils import parse_binary_rle
 from image_window import ImageWindow
 from window_manager import WINDOW_MANAGER
 
@@ -27,6 +30,10 @@ class MainWindow(QMainWindow):
         open_color_action.triggered.connect(self.open_image_color)
         open_color_action.setShortcut("Ctrl+O")
 
+        open_rle_action = QAction("Open (RLE)", self)
+        open_rle_action.triggered.connect(self.open_image_rle)
+
+
         exit_action = QAction("&Exit", self)
         exit_action.setShortcut("Ctrl+Q")
         exit_action.triggered.connect(self.quit)
@@ -35,6 +42,7 @@ class MainWindow(QMainWindow):
         self.file_menu = self.menu_bar.addMenu("&File")
         self.file_menu.addAction(open_gsc_action)
         self.file_menu.addAction(open_color_action)
+        self.file_menu.addAction(open_rle_action)
         self.file_menu.addSeparator()
         self.file_menu.addAction(exit_action)
 
@@ -111,32 +119,33 @@ class MainWindow(QMainWindow):
         dlg.setIconPixmap(QPixmap("assets/icon.png"))
         dlg.exec()
 
-    def open_file_dialog(self):
+    def open_file_dialog(self, filters):
         dlg = QFileDialog()
         dlg.setAcceptMode(QFileDialog.AcceptOpen)
         dlg.setFileMode(QFileDialog.ExistingFile)
 
-        filters = [
-            "Supported Graphics Files (*.bmp *.png *.jpg *.jpeg)",
-            "BMP Files (*.bmp)",
-            "JPG Files (*.jpg *.jpeg)",
-            "PNG Files (*.png)",
-        ]
         dlg.setNameFilters(filters)
         dlg.selectNameFilter(filters[0])
 
         dlg.exec()
 
         result = dlg.selectedFiles()
-        if len(result) > 0:
+        if len(result) > 0 and dlg.result() == QFileDialog.Accepted:
             result = result[0]
             return result
         else:
             return None
 
     def open_image_gsc(self):
+        filters = [
+            "Supported Graphics Files (*.bmp *.png *.jpg *.jpeg)",
+            "BMP Files (*.bmp)",
+            "JPG Files (*.jpg *.jpeg)",
+            "PNG Files (*.png)",
+        ]
+
         try:
-            path = self.open_file_dialog()
+            path = self.open_file_dialog(filters)
             if path is not None:
                 imgwin = ImageWindow.from_path(path, True)
                 imgwin.show()
@@ -144,10 +153,34 @@ class MainWindow(QMainWindow):
             ErrorBox("Something went wrong!")
 
     def open_image_color(self):
+        filters = [
+            "Supported Graphics Files (*.bmp *.png *.jpg *.jpeg)",
+            "BMP Files (*.bmp)",
+            "JPG Files (*.jpg *.jpeg)",
+            "PNG Files (*.png)",
+        ]
+
         try:
-            path = self.open_file_dialog()
+            path = self.open_file_dialog(filters)
             if path is not None:
                 imgwin = ImageWindow.from_path(path, False)
+                imgwin.show()
+        except Exception as e:
+            ErrorBox("Something went wrong!")
+
+    def open_image_rle(self):
+        filters = [
+            "Any files (*.*)"
+        ]
+
+        try:
+            path = self.open_file_dialog(filters)
+            if path is not None:
+                with open(path, "rb") as f:
+                    rle_bytes = bytearray(f.read())
+                rle_img = parse_binary_rle(rle_bytes)
+                name, _ = os.path.splitext(os.path.basename(path))
+                imgwin = ImageWindow.from_numpy(rle_img, name)
                 imgwin.show()
         except Exception as e:
             ErrorBox("Something went wrong!")
