@@ -29,7 +29,7 @@ class MainWindow(QMainWindow):
 
         exit_action = QAction("&Exit", self)
         exit_action.setShortcut("Ctrl+Q")
-        exit_action.triggered.connect(self.close)
+        exit_action.triggered.connect(self.quit)
         exit_action.setStatusTip("Exits the application")
 
         self.file_menu = self.menu_bar.addMenu("&File")
@@ -76,6 +76,20 @@ class MainWindow(QMainWindow):
         about_action.setShortcut("F1")
         about_action.triggered.connect(self.about)
         self.about_menu = self.menu_bar.addAction(about_action)
+
+    def quit(self):
+        should_close = WINDOW_MANAGER.window_count == 0
+
+        if not should_close:
+            confirmation_box = QMessageBox
+            answer = confirmation_box.question(self,
+                                               "Quit", "Are you sure you want to quit?\nUnsaved changes will be lost!",
+                                               confirmation_box.Yes | confirmation_box.No
+                                               )
+            should_close = answer == confirmation_box.Yes
+
+        if should_close:
+            self.close()
 
     def closeEvent(self, event):
         WINDOW_MANAGER.remove_all()
@@ -128,7 +142,6 @@ class MainWindow(QMainWindow):
                 imgwin.show()
         except Exception as e:
             ErrorBox("Something went wrong!")
-
 
     def open_image_color(self):
         try:

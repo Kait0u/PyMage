@@ -23,5 +23,9 @@ class WindowManager:
         win_id = [id(window)]
         return self._sqids.encode(win_id)
 
+    @property
+    def window_count(self):
+        return len(self._windows)
+
 
 WINDOW_MANAGER = WindowManager()

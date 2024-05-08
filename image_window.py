@@ -1,7 +1,7 @@
 import numpy as np
 from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget, QStatusBar
+from PyQt5.QtGui import QPixmap, QImage, QIcon
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget, QStatusBar, QMessageBox
 
 from error_box import ErrorBox
 
@@ -28,8 +28,7 @@ class ImageWindow(QMainWindow):
         self.current_zoom = 100
 
         self.setWindowTitle(f"{self.image.name} ({self.id}) | PyMage")
-        # self.setMinimumSize(MIN_SIZE, MIN_SIZE)
-        # self.resize(self.image.width, self.image.height)
+        self.setWindowIcon(QIcon("assets/icon.png"))
 
         self.menu_bar = QMenuBar(self)
         self.setMenuBar(self.menu_bar)
@@ -102,6 +101,13 @@ class ImageWindow(QMainWindow):
         disp_hist_action.setShortcut("Ctrl+H")
         disp_hist_action.triggered.connect(self.display_histogram)
         self.histogram_menu.addAction(disp_hist_action)
+
+        self.image_menu.addSeparator()
+
+        quit_action = QAction("Quit", self)
+        quit_action.setShortcut("Ctrl+Q")
+        quit_action.triggered.connect(self.quit)
+        self.image_menu.addAction(quit_action)
 
         # Operations
         self.op_menu = self.menu_bar.addMenu("&Operations")
@@ -419,6 +425,15 @@ class ImageWindow(QMainWindow):
 
         if was_maximized:
             self.showMaximized()
+
+    def quit(self):
+        confirmation_box = QMessageBox
+        answer = confirmation_box.question(self,
+                                           "Quit", "Are you sure you want to quit?\nUnsaved changes will be lost!",
+                                           confirmation_box.Yes | confirmation_box.No
+                                           )
+        if answer == confirmation_box.Yes:
+            self.close()
 
     def to_grayscale(self):
         self.image.convert_color(ColorModes.GRAY)
