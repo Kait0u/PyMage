@@ -173,6 +173,10 @@ class Image:
     def color_mode(self):
         return self._color_mode
 
+    @property
+    def size_bytes(self):
+        return self.img.nbytes
+
     @staticmethod
     def from_file(path: str, grayscale: bool = False) -> "Image":
         img = cv.imread(path, cv.IMREAD_GRAYSCALE if grayscale else cv.IMREAD_COLOR)
@@ -568,7 +572,7 @@ class Image:
         out_mask = np.where((mask == 0) | (mask == 2), 0, 1)
         out_mask = np.uint8(out_mask)
 
-        temp_img.img *= out_mask[:,:,np.newaxis]
+        temp_img.img *= out_mask[:, :, np.newaxis]
 
         return Image.from_numpy(temp_img.img, f"GC_{temp_img.name}")
 
@@ -676,6 +680,25 @@ class Image:
                 c = color
             clr = np.array(c, dtype=np.float64)
             result.img = cv.drawContours(result.img, [cnt], 0, clr, 3 if not filled else cv.FILLED)
+
+        return result
+
+    @grayscale_only
+    def rle_encode_img(self) -> list[tuple[int, int]]:
+        result = []
+        flat_img = list(self.img.flat)
+
+        curr_pix = flat_img[0]
+        curr_count = 0
+
+        for pixel in flat_img:
+            if pixel == curr_pix:
+                curr_count += 1
+            else:
+                t = (curr_pix, curr_count)
+                result.append(t)
+                curr_pix = pixel
+                curr_count = 1
 
         return result
 
