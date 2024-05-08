@@ -85,6 +85,10 @@ class ImageWindow(QMainWindow):
         save_action.triggered.connect(self.save)
         self.image_menu.addAction(save_action)
 
+        save_rle_action = QAction("Save (RLE)", self)
+        save_rle_action.triggered.connect(self.save_rle)
+        self.image_menu.addAction(save_rle_action)
+
         duplicate_action = QAction("Duplicate", self)
         duplicate_action.triggered.connect(self.duplicate)
         duplicate_action.setShortcut("Ctrl+D")
@@ -1048,7 +1052,7 @@ class ImageWindow(QMainWindow):
         dlg.exec()
 
         result = dlg.selectedFiles()
-        if len(result) > 0:
+        if len(result) > 0 and dlg.result() == QFileDialog.Accepted:
             result = result[0]
             return result
         else:
@@ -1059,6 +1063,19 @@ class ImageWindow(QMainWindow):
             path = self._save_file_dialog()
             if path is not None:
                 self.image.save_to_file(path)
+                InfoBox("File saved successfully!")
         except Exception as e:
             ErrorBox("Something went wrong!")
+
+    def save_rle(self):
+        from rle_window import RLEWindow
+        try:
+            self.check_gray()
+            rle_window = RLEWindow(self.image, self)
+            rle_window.show()
+
+        except Exception as e:
+            ErrorBox(e)
+
+
 
