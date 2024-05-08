@@ -1,15 +1,14 @@
 import numpy as np
-from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtGui import QPixmap, QImage, QIcon
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap, QImage, QIcon, QPalette
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget, QStatusBar, QMessageBox
 
 from error_box import ErrorBox
-
-from image import Image, ColorModes
 from histogram_window import HistogramWindow
-from object_traits_window import ObjectTraitsWindow
+from image import Image, ColorModes
 from image_utils import structuring_element
 from info_box import InfoBox
+from object_traits_window import ObjectTraitsWindow
 from utils import bresenham
 from widgets.scale_slider import ScaleSlider
 from window_manager import WINDOW_MANAGER
@@ -317,14 +316,29 @@ class ImageWindow(QMainWindow):
 
         # [Post-render activities]
 
+        bgc = self.palette().color(self.backgroundRole()).getRgb()[:3]  # Background color
+        tc = self.palette().color(QPalette.WindowText).getRgb()[:3]  # Text color
+
         self.status_bar.setStyleSheet("""
         QStatusBar {
             border-left: 1px inset #AAAAAA;
             border-top: 1px inset #AAAAAA;
-            background: #ffffff;
-        }
+        """ +
+        f"""
+            background: rgb{bgc};
+        """ +
         """
-                                      )
+        }
+        
+        QStatusBar QLabel {
+        """ +
+        f"""
+        color: rgb{tc};
+        """ +
+        """
+        }
+        """)
+
         self.histogram_window = None
         self.refresh_image()
 
