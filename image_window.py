@@ -1,7 +1,10 @@
+import os
+
 import numpy as np
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage, QIcon, QPalette
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget, QStatusBar, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QMenuBar, QAction, QWidget, QStatusBar, QMessageBox, \
+    QFileDialog
 
 from error_box import ErrorBox
 from histogram_window import HistogramWindow
@@ -76,6 +79,11 @@ class ImageWindow(QMainWindow):
         self.type_menu.addAction(split_hsv_action)
 
         self.image_menu.addSeparator()
+
+        save_action = QAction("Save", self)
+        save_action.setShortcut("Ctrl+S")
+        save_action.triggered.connect(self.save)
+        self.image_menu.addAction(save_action)
 
         duplicate_action = QAction("Duplicate", self)
         duplicate_action.triggered.connect(self.duplicate)
@@ -1015,3 +1023,42 @@ class ImageWindow(QMainWindow):
 
         except Exception as error:
             ErrorBox(error)
+
+    def _save_file_dialog(self):
+        dlg = QFileDialog()
+        dlg.setAcceptMode(QFileDialog.AcceptSave)
+        dlg.setFileMode(QFileDialog.AnyFile)
+
+        filters = [
+            "BMP Files (*.bmp)",
+            "JPG Files (*.jpg)",
+            "PNG Files (*.png)",
+            "All Files (*.*)",
+        ]
+        dlg.setNameFilters(filters)
+
+        file_name, ext = os.path.splitext(self.image.name)
+        idx_list = [i for i, filt in enumerate(filters) if ext.lower() in filt]
+        idx = idx_list[0] if len(idx_list) > 0 else -1
+
+        dlg.selectNameFilter(filters[idx])
+        dlg.selectFile(file_name)
+        dlg.setDefaultSuffix(ext)
+
+        dlg.exec()
+
+        result = dlg.selectedFiles()
+        if len(result) > 0:
+            result = result[0]
+            return result
+        else:
+            return None
+
+    def save(self):
+        try:
+            path = self._save_file_dialog()
+            if path is not None:
+                self.image.save_to_file(path)
+        except Exception as e:
+            ErrorBox("Something went wrong!")
+

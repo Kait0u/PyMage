@@ -204,6 +204,9 @@ class Image:
 
         return new_image
 
+    def save_to_file(self, path: str):
+        cv.imwrite(path, self.img)
+
     def copy(self) -> "Image":
         new_image = Image(self._name, self.width, self.height)
         new_image._color_mode = self.color_mode
