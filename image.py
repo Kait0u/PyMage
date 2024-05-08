@@ -703,6 +703,10 @@ class Image:
                 curr_pix = pixel
                 curr_count = 1
 
+        # Add the final finding
+        t = (curr_pix, curr_count)
+        result.append(t)
+
         return result
 
 
