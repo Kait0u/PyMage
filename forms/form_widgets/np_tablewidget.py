@@ -36,6 +36,9 @@ class NpTableWidget(QTableWidget):
         for idx_r in range(r):
             for idx_c in range(c):
                 item = QSpinBox()
+                item.setAlignment(Qt.AlignCenter)
+                item.setMinimum(-32000)
+                item.setMaximum(32000)
                 new_widget.setCellWidget(idx_r, idx_c, item)
         return new_widget
 
