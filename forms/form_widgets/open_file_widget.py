@@ -35,7 +35,7 @@ class OpenFileWidget(QWidget):
         dlg.exec()
 
         result = dlg.selectedFiles()
-        if len(result) > 0:
+        if len(result) > 0 and dlg.result() == QFileDialog.Accepted:
             result = result[0]
             return result
         else:
