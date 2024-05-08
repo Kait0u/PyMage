@@ -1,7 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication
-from main_window import MainWindow
-from forms.range_stretch_form import RangeStretchForm
+from app.main_window import MainWindow
 
 
 def main():
