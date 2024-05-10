@@ -19,7 +19,7 @@ Credit project for Image Processing Algorithms class
 - Image Pyramid
 - Profile Line
 
-## Class 4 (WIP)
+## Class 4
 - Segmentation
   - Thresholding
   - GrabCut
