@@ -29,3 +29,4 @@ Credit project for Image Processing Algorithms class
 - RLE
   - Line-by-line encoding
   - Save binary file
+  - Open binary file
