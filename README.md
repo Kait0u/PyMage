@@ -26,4 +26,5 @@ Credit project for Image Processing Algorithms class
   - Watershed
 - Inpainting
 - Object Traits
-- RLE (WIP)
+- RLE
+  - Line-by-line encoding
