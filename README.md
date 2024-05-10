@@ -28,3 +28,4 @@ Credit project for Image Processing Algorithms class
 - Object Traits
 - RLE
   - Line-by-line encoding
+  - Save binary file
