@@ -11,12 +11,13 @@ from masks.laplace_masks import LaplaSharpen
 class LaplaSharpenForm(QDialog):
     def __init__(self, parent: QMainWindow | None = None):
         super().__init__()
-        self.filter = LaplaSharpen.CROSS_5.value
         self.filter_options = [LaplaSharpen.CROSS_5, LaplaSharpen.SQUARE_5, LaplaSharpen.SQUARE_9]
-        self.ddepth = DesiredDepth.U8
+        self.filter = self.filter_options[0]
+        self.filter_np = self.filter.value
         self.ddepth_options = [DesiredDepth.U8, DesiredDepth.F64]
-        self.padding = Padding.REPLICATE
+        self.ddepth = self.ddepth_options[0]
         self.padding_options = [Padding.REPLICATE, Padding.ISOLATED, Padding.REFLECT]
+        self.padding = self.padding_options[0]
 
         title = "LaplaSharpen"
         if parent is not None:
@@ -42,7 +43,7 @@ class LaplaSharpenForm(QDialog):
         self.filter_combo_box.currentIndexChanged.connect(self.filter_idx_changed)
         form_layout1.addRow("Filter", self.filter_combo_box)
 
-        self.filter_table = NpTableWidget(self.filter)
+        self.filter_table = NpTableWidget(self.filter_np)
         main_layout.addWidget(self.filter_table)
 
         form_widget2 = QWidget()
@@ -82,8 +83,9 @@ class LaplaSharpenForm(QDialog):
         return c1 and c2 and c3
 
     def filter_idx_changed(self, idx):
-        self.filter = self.filter_options[idx].value
-        self.filter_table.data = self.filter
+        self.filter = self.filter_options[idx]
+        self.filter_np = self.filter.value
+        self.filter_table.data = self.filter_np
 
     def padding_idx_changed(self, idx):
         self.padding = self.padding_options[idx]
@@ -92,15 +94,18 @@ class LaplaSharpenForm(QDialog):
         self.ddepth = self.ddepth_options[idx]
 
     def accept(self):
-        if self.is_data_valid: super().accept()
-        else: ErrorBox("Invalid data")
+        if self.is_data_valid:
+            self.filter = self.filter.value
+            super().accept()
+        else:
+            ErrorBox("Invalid data")
 
     @staticmethod
     def show_dialog(parent=None) -> tuple[np.ndarray, DesiredDepth, Padding] | None:
         lsf = LaplaSharpenForm(parent)
         lsf.setModal(True)
         result = lsf.exec()
-        return (lsf.filter, lsf.ddepth, lsf.padding) \
+        return (lsf.filter_np, lsf.ddepth, lsf.padding) \
             if result == QDialog.Accepted else None
 
 
