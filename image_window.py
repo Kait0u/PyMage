@@ -485,6 +485,8 @@ class ImageWindow(QMainWindow):
         for img in imgs:
             try:
                 img.stretch_histogram(LMIN, LMAX)
+            except ValueError as error:
+                pass
             except Exception as error:
                 ErrorBox(error)
             img_win = ImageWindow(img)
@@ -498,6 +500,8 @@ class ImageWindow(QMainWindow):
         for img in imgs:
             try:
                 img.stretch_histogram(LMIN, LMAX)
+            except ValueError as error:
+                pass
             except Exception as error:
                 ErrorBox(error)
             img_win = ImageWindow(img)
@@ -1063,7 +1067,7 @@ class ImageWindow(QMainWindow):
             path = self._save_file_dialog()
             if path is not None:
                 self.image.save_to_file(path)
-                InfoBox("File saved successfully!")
+                InfoBox("Success!", "File saved successfully!")
         except Exception as e:
             ErrorBox("Something went wrong!")
 
