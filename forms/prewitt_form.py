@@ -12,12 +12,14 @@ from masks.prewitt_masks import Prewitt
 class PrewittForm(QDialog):
     def __init__(self, parent: QMainWindow | None = None):
         super().__init__()
-        self.filter = Prewitt.N.value
+
         self.filter_options = [Prewitt.N, Prewitt.NE, Prewitt.E, Prewitt.SE, Prewitt.S, Prewitt.SW, Prewitt.W, Prewitt.NW]
-        self.ddepth = DesiredDepth.U8
+        self.filter = self.filter_options[0]
+        self.filter_np = self.filter.value
         self.ddepth_options = [DesiredDepth.U8, DesiredDepth.F64]
-        self.padding = Padding.REPLICATE
+        self.ddepth = self.ddepth_options[0]
         self.padding_options = [Padding.REPLICATE, Padding.ISOLATED, Padding.REFLECT]
+        self.padding = self.padding_options[0]
 
         title = "Prewitt"
         if parent is not None:
@@ -30,7 +32,7 @@ class PrewittForm(QDialog):
         main_layout = QHBoxLayout()
         self.setLayout(main_layout)
 
-        self.filter_table = NpTableWidget(self.filter)
+        self.filter_table = NpTableWidget(self.filter_np)
         main_layout.addWidget(self.filter_table)
 
         right_side_widget = QWidget()
@@ -105,9 +107,10 @@ class PrewittForm(QDialog):
         value %= len(self.filter_options)
 
         new_filter = self.filter_options[value]
-        self.filter = new_filter.value
+        self.filter = new_filter
+        self.filter_np = self.filter.value
         self.direction_label.setText(new_filter.name)
-        self.filter_table.data = self.filter
+        self.filter_table.data = self.filter_np
 
     def padding_idx_changed(self, idx):
         self.padding = self.padding_options[idx]
@@ -124,7 +127,7 @@ class PrewittForm(QDialog):
         pf = PrewittForm(parent)
         pf.setModal(True)
         result = pf.exec()
-        return (pf.filter, pf.ddepth, pf.padding) \
+        return (pf.filter_np, pf.ddepth, pf.padding) \
             if result == QDialog.Accepted else None
 
 
