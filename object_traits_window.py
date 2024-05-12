@@ -17,7 +17,7 @@ LMIN = 0
 LMAX = 255
 MAX_SIZE = 256
 YELLOW = (255, 220, 0)
-
+FALLBACK = "FAILED"
 
 class ObjectTraitsWindow(QMainWindow):
     def __init__(self, contours: np.ndarray | Sequence[int], parent: QMainWindow | None = None):
@@ -146,14 +146,14 @@ class ObjectTraitsWindow(QMainWindow):
     def update_tables(self):
         moments = img_traits.moments(self.curr_cnt)
         geometry = {
-            "Area": img_traits.area(self.curr_cnt),
-            "Perimeter": img_traits.perimeter(self.curr_cnt)
+            "Area": fallback_value(lambda: img_traits.area(self.curr_cnt), FALLBACK),
+            "Perimeter": fallback_value(lambda: img_traits.perimeter(self.curr_cnt), FALLBACK),
         }
         coeffs = {
-            "Aspect Ratio": img_traits.aspect_ratio(self.curr_cnt),
-            "Extent": img_traits.extent(self.curr_cnt),
-            "Solidity": img_traits.solidity(self.curr_cnt),
-            "Equivalent Diameter": img_traits.equivalent_diameter(self.curr_cnt)
+            "Aspect Ratio": fallback_value(lambda: img_traits.aspect_ratio(self.curr_cnt), FALLBACK),
+            "Extent": fallback_value(lambda: img_traits.extent(self.curr_cnt), FALLBACK),
+            "Solidity": fallback_value(lambda: img_traits.solidity(self.curr_cnt), FALLBACK),
+            "Equivalent Diameter": fallback_value(lambda: img_traits.equivalent_diameter(self.curr_cnt), FALLBACK)
         }
 
         self.mom_table.clear()
@@ -190,3 +190,11 @@ class ObjectTraitsWindow(QMainWindow):
     def closeEvent(self, event):
         WINDOW_MANAGER.remove_window(self)
         event.accept()
+
+
+def fallback_value(f, fallback):
+    try:
+        value = f()
+        return value
+    except Exception:
+        return fallback
