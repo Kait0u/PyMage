@@ -16,7 +16,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("PyMage")
         self.setWindowIcon(QIcon("assets/icon.png"))
-        self.setMinimumSize(360, 130)
+        self.setFixedSize(360, 130)
 
         self.menu_bar = QMenuBar(self)
         self.setMenuBar(self.menu_bar)
