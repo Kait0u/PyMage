@@ -28,6 +28,7 @@ class ImageWindow(QMainWindow):
 
         self.image = image
         self.current_zoom = 100
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowMaximizeButtonHint)
 
         self.setWindowTitle(f"{self.image.name} ({self.id}) | PyMage")
         self.setWindowIcon(QIcon("assets/icon.png"))
