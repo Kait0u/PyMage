@@ -511,7 +511,7 @@ class ImageWindow(QMainWindow):
 
     def duplicate(self):
         new_image = self.image.copy()
-        new_image.name += "_duplicate"
+        new_image.name = f"dup_{new_image.name}"
         new_window = ImageWindow(new_image)
         new_window.show()
 
